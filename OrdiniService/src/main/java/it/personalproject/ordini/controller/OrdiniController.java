@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.personalproject.ordini.domain.OrdineModel;
 import it.personalproject.ordini.domain.OrdiniService;
 
 @RestController
+@RequestMapping("/ordini")
 public class OrdiniController {
 	
 	private final OrdiniService ordiniService;
@@ -22,22 +24,22 @@ public class OrdiniController {
 		this.ordiniService = ordiniService;
 	}
 	
-	@PostMapping("/ordini/crea")
+	@PostMapping("/crea")
 	public void creaOrdine(@RequestBody OrdineModel ordine) {
 		ordiniService.creaOrdine(ordine);
 	}
 	
-	@GetMapping("/ordini/{id}")
+	@GetMapping("/{id}")
 	public OrdineModel getOrdine(@PathVariable("id") Integer id) {
 		return ordiniService.getOrdine(id);	
 	}
 	
-	@DeleteMapping("/ordini/{id}")
+	@DeleteMapping("/{id}")
 	public void cancellaOrdine(@PathVariable("id") Integer id) {
 		ordiniService.cancellaOrdine(id);
 	}
 	
-	@PutMapping("/ordini/modifica")
+	@PutMapping("/modifica")
 	public void aggiornaOrdine(@RequestBody OrdineModel ordine) {
 		ordiniService.aggiornaOrdine(ordine);
 	}

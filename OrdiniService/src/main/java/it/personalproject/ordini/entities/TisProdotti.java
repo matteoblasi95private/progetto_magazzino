@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 public class TisProdotti {
 
     @Id
+    @Column(name = "Id", nullable = false)
     private Integer id;
 
     @Column(nullable = false)

@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 public class TisClienti {
 
     @Id
+    @Column(name = "Id", nullable = false)
     private Integer id;
 
     @Column(name = "CodiceFiscale", nullable = false)

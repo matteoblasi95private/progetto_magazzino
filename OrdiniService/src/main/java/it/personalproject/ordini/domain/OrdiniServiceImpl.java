@@ -3,12 +3,14 @@ package it.personalproject.ordini.domain;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import it.personalproject.ordini.converters.OrdiniModelToOrdiniEntityConverter;
 import it.personalproject.ordini.converters.OrdiniEntityToOrdiniModelConverter;
 import it.personalproject.ordini.entities.TisOrdini;
 import it.personalproject.ordini.repositories.OrdiniRepository;
 
+@Service
 public class OrdiniServiceImpl implements OrdiniService {
 	
 	private final OrdiniRepository ordiniRepository;
