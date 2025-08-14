@@ -1,6 +1,11 @@
 package it.personalproject.ordini.controller;
 
+import java.net.URI;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,23 +30,51 @@ public class OrdiniController {
 	}
 	
 	@PostMapping("/crea")
-	public void creaOrdine(@RequestBody OrdineModel ordine) {
-		ordiniService.creaOrdine(ordine);
+	public ResponseEntity<OrdineModel> creaOrdine(@RequestBody OrdineModel ordine) {
+		
+        OrdineModel nuovo = ordiniService.creaOrdine(ordine);
+		
+		URI location = URI.create("/ordini/" + nuovo.getId());
+        return ResponseEntity.created(location).body(nuovo);
+		
 	}
 	
 	@GetMapping("/{id}")
-	public OrdineModel getOrdine(@PathVariable("id") Integer id) {
-		return ordiniService.getOrdine(id);	
+	public ResponseEntity<OrdineModel> getOrdine(@PathVariable("id") Integer id) {
+		
+		OrdineModel ordine = ordiniService.getOrdine(id);
+		
+		return ResponseEntity
+	            .status(HttpStatus.OK)
+	            .body(ordine);
 	}
 	
 	@DeleteMapping("/{id}")
-	public void cancellaOrdine(@PathVariable("id") Integer id) {
+	public ResponseEntity cancellaOrdine(@PathVariable("id") Integer id) {
+		
 		ordiniService.cancellaOrdine(id);
+		
+		return ResponseEntity.noContent().build();
 	}
 	
 	@PutMapping("/modifica")
-	public void aggiornaOrdine(@RequestBody OrdineModel ordine) {
-		ordiniService.aggiornaOrdine(ordine);
+	public ResponseEntity<OrdineModel> aggiornaOrdine(@RequestBody OrdineModel ordine) {
+		OrdineModel aggiornato = ordiniService.aggiornaOrdine(ordine);
+		
+		return ResponseEntity
+	            .status(HttpStatus.OK)
+	            .body(aggiornato);
+	}
+	
+	
+	@GetMapping("/all")
+	public ResponseEntity<List<OrdineModel>> getAllOrdini() {
+		
+		List<OrdineModel> ordini = ordiniService.getAllOrdini();
+		
+		return ResponseEntity
+	            .status(HttpStatus.OK)
+	            .body(ordini);
 	}
 
 }

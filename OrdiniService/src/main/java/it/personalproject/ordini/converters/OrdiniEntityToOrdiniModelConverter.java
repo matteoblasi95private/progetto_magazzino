@@ -21,6 +21,8 @@ public class OrdiniEntityToOrdiniModelConverter implements Converter<TisOrdini, 
 			
 			result = new OrdineModel();
 			
+			result.setId(source.getId());
+			
 			if(source.getIdCliente() != null) {
 				result.setIdCliente(source.getIdCliente().getId());
 			}
