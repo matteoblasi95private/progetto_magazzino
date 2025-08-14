@@ -1,0 +1,75 @@
+#################################
+# Sistema operativo
+#################################
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+#################################
+# IDE / Editor
+#################################
+# Eclipse / Spring Tool Suite
+.project
+.classpath
+.settings/
+.metadata/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# VS Code
+.vscode/
+
+#################################
+# Maven / Gradle
+#################################
+# Maven target dir
+target/
+
+# Gradle
+.gradle/
+build/
+
+# Log e file temporanei
+*.log
+*.tmp
+*.bak
+
+# Cache varie
+.cache/
+.mvn/wrapper/maven-wrapper.jar
+
+#################################
+# Java
+#################################
+*.class
+
+#################################
+# Librerie dipendenze (non tracciare jar generati)
+*.jar
+*.war
+*.ear
+
+#################################
+# Config locali / vari
+#################################
+# Variabili d'ambiente
+.env
+.env.*
+*.local
+
+# File di test coverage / report
+*.lcov
