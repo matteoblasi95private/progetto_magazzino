@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>it.personalproject</groupId>
-	<artifactId>OrdiniService</artifactId>
+	<artifactId>ProdottiService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>OrdiniService</name>
 	<description>Ordini Service</description>
