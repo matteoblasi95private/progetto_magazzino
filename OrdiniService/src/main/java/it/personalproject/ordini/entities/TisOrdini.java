@@ -31,7 +31,7 @@ public class TisOrdini {
 	@Column(name = "dataCreazione", updatable = false)
 	private LocalDateTime dataCreazione;
 	
-	@Column(name = "dataAggiornamento", updatable = false)
+	@Column(name = "dataAggiornamento")
 	private LocalDateTime dataAggiornamento;
 
 	public Integer getId() {
