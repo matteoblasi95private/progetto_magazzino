@@ -1,0 +1,64 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: apigateway
+
+  cloud:
+    gateway:
+      default-filters:
+        - RemoveRequestHeader=Cookie
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      routes:
+        - id: clienti
+          uri: http://clienticontainer:8080
+          predicates:
+            - Path=/api/clienti/**
+          filters:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: clientiCB
+                fallbackUri: forward:/fallback/clienti
+
+        - id: prodotti
+          uri: http://prodotticontainer:8080
+          predicates:
+            - Path=/api/prodotti/**
+          filters:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: prodottiCB
+                fallbackUri: forward:/fallback/prodotti
+
+        - id: ordini
+          uri: http://ordinicontainer:8080
+          predicates:
+            - Path=/api/ordini/**
+          filters:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: ordiniCB
+                fallbackUri: forward:/fallback/ordini
+
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: false
+
+  main:
+    web-application-type: reactive
+  webflux:
+    base-path: /
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

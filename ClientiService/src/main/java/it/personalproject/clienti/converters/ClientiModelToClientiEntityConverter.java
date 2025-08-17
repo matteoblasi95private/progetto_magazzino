@@ -2,7 +2,6 @@ package it.personalproject.clienti.converters;
 
 import java.util.Optional;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ import it.personalproject.clienti.repositories.ClientiRepository;
 public class ClientiModelToClientiEntityConverter implements Converter<ClienteModel, TisClienti> {
 
 	@Override
-	public @Nullable TisClienti convert(ClienteModel source) {
+	public TisClienti convert(ClienteModel source) {
 		
 		TisClienti result = null;
 		

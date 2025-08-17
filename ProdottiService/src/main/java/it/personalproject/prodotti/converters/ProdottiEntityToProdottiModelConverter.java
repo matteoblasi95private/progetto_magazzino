@@ -2,7 +2,6 @@ package it.personalproject.prodotti.converters;
 
 import java.util.Optional;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,7 @@ import it.personalproject.prodotti.entities.TisProdotti;
 public class ProdottiEntityToProdottiModelConverter implements Converter<TisProdotti, ProdottiModel>{
 
 	@Override
-	public @Nullable ProdottiModel convert(TisProdotti source) {
+	public ProdottiModel convert(TisProdotti source) {
 		
 		ProdottiModel result = null;
 		

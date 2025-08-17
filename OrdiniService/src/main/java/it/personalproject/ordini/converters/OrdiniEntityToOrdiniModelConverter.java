@@ -2,7 +2,6 @@ package it.personalproject.ordini.converters;
 
 import java.util.Optional;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,7 @@ import it.personalproject.ordini.entities.TisOrdini;
 public class OrdiniEntityToOrdiniModelConverter implements Converter<TisOrdini, OrdineModel>{
 
 	@Override
-	public @Nullable OrdineModel convert(TisOrdini source) {
+	public OrdineModel convert(TisOrdini source) {
 		
 		OrdineModel result = null;
 		

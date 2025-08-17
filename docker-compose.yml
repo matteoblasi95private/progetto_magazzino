@@ -88,6 +88,22 @@ services:
         condition: service_healthy
       init-db:
         condition: service_completed_successfully
+  
+  apigateway:
+    build:
+      context: ./apigateway
+    container_name: apigatewaycontainer
+    ports:
+      - "8088:8080"
+    depends_on:
+      init-db:
+        condition: service_completed_successfully
+      clienti:
+        condition: service_started
+      prodotti:
+        condition: service_started
+      ordini:
+        condition: service_started
 
 
 volumes:

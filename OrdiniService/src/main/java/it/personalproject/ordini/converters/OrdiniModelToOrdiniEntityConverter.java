@@ -2,7 +2,6 @@ package it.personalproject.ordini.converters;
 
 import java.util.Optional;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class OrdiniModelToOrdiniEntityConverter implements Converter<OrdineModel
 	private ProdottiRepository prodottiRepository;
 
 	@Override
-	public @Nullable TisOrdini convert(OrdineModel source) {
+	public TisOrdini convert(OrdineModel source) {
 		
 		TisOrdini result = null;
 		

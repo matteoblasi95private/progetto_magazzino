@@ -2,7 +2,6 @@ package it.personalproject.prodotti.converters;
 
 import java.util.Optional;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ import it.personalproject.prodotti.repositories.ProdottiRepository;
 public class ProdottiModelToProdottiEntityConverter implements Converter<ProdottiModel, TisProdotti> {
 
 	@Override
-	public @Nullable TisProdotti convert(ProdottiModel source) {
+	public TisProdotti convert(ProdottiModel source) {
 		
 		TisProdotti result = null;
 		
