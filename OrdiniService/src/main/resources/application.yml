@@ -3,7 +3,7 @@ spring:
     name: OrdiniService
 
   datasource:
-    url: jdbc:sqlserver://host.docker.internal:1433;databaseName=DBMAGAZZINI;encrypt=true;trustServerCertificate=true
+    url: jdbc:sqlserver://sqlserver-db:1433;databaseName=DBMAGAZZINI;encrypt=true;trustServerCertificate=true
     username: admin
     password: magazzinetto34
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver

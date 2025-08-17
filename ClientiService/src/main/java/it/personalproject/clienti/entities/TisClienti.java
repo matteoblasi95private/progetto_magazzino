@@ -10,6 +10,7 @@ public class TisClienti {
 
     @Id
     @Column(name = "Id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "CodiceFiscale", nullable = false)
