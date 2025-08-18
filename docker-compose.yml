@@ -47,6 +47,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: "Magazzinetto34*"
       SPRING_JPA_HIBERNATE_NAMING_PHYSICAL_STRATEGY: "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"
       SPRING_JPA_SHOW_SQL: "true"
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://magazzino-eureka:8761/eureka/"
     ports:
       - "9090:8080"
     depends_on:
@@ -54,6 +57,8 @@ services:
         condition: service_healthy
       init-db:
         condition: service_completed_successfully
+      magazzino-eureka:
+        condition: service_started
   prodotti:
     build:
       context: ./ProdottiService
@@ -64,6 +69,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: "Magazzinetto34*"
       SPRING_JPA_HIBERNATE_NAMING_PHYSICAL_STRATEGY: "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"
       SPRING_JPA_SHOW_SQL: "true"
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://magazzino-eureka:8761/eureka/"
     ports:
       - "9091:8080"
     depends_on:
@@ -71,6 +79,8 @@ services:
         condition: service_healthy
       init-db:
         condition: service_completed_successfully
+      magazzino-eureka:
+        condition: service_healthy
   ordini:
     build:
       context: ./OrdiniService
@@ -81,6 +91,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: "Magazzinetto34*"
       SPRING_JPA_HIBERNATE_NAMING_PHYSICAL_STRATEGY: "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"
       SPRING_JPA_SHOW_SQL: "true"
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://magazzino-eureka:8761/eureka/"
     ports:
       - "9092:8080"
     depends_on:
@@ -88,6 +101,8 @@ services:
         condition: service_healthy
       init-db:
         condition: service_completed_successfully
+      magazzino-eureka:
+        condition: service_healthy
   
   apigateway:
     build:
@@ -104,7 +119,26 @@ services:
         condition: service_started
       ordini:
         condition: service_started
-
-
+      magazzino-eureka:
+        condition: service_healthy
+        
+  magazzino-eureka:
+    build:
+      context: ./ServiceDiscovery
+    container_name: magazzino-eureka-container
+    ports:
+      - "8761:8761"
+    environment:
+      SPRING_APPLICATION_NAME: "eureka-server"
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+      EUREKA_CLIENT_FETCH_REGISTRY: "false"
+      SERVER_PORT: "8761"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+      
 volumes:
   sqlserver_data:      
