@@ -17,6 +17,46 @@ END;
 GO
 
 
+IF  NOT EXISTS (SELECT * FROM sys.objects 
+WHERE object_id = OBJECT_ID(N'[dbo].[TIS_ROLE]') AND type in (N'U'))
+
+BEGIN
+
+
+CREATE TABLE [dbo].[TIS_ROLE](
+	[Id] [int] PRIMARY KEY NOT NULL,
+	[Name] [varchar](800) NOT NULL,
+	[Descr] [varchar](150) NOT NULL
+);
+
+INSERT INTO TIS_ROLE VALUES(1, 'USER', 'SIMPLE USER');
+INSERT INTO TIS_ROLE VALUES(2, 'ADMIN', 'Amministratore');
+
+END
+
+
+IF  NOT EXISTS (SELECT * FROM sys.objects 
+WHERE object_id = OBJECT_ID(N'[dbo].[TIS_USER]') AND type in (N'U'))
+
+BEGIN
+
+
+CREATE TABLE [dbo].[TIS_USER](
+	[Username] [varchar](60) PRIMARY KEY NOT NULL,
+	[Password] [varchar](800) NOT NULL,
+	[Email] [varchar](150) NOT NULL,
+	[PhoneNumber] [varchar](20) NULL,
+	[CreatedAt] [datetime] NULL,
+	[UpdatedAt] [datetime] NULL,
+	[IdRuolo] INT,
+	CONSTRAINT [USER_ROLE_FK] FOREIGN KEY([IdRuolo])
+	REFERENCES [dbo].[TIS_ROLE] ([Id])
+);
+
+INSERT INTO TIS_USER VALUES('matteo', 'SuperStrongPw1234*', 'aaa@bb', '1234', GETDATE(), GETDATE(), 1);
+
+END
+
 
 IF  NOT EXISTS (SELECT * FROM sys.objects 
 WHERE object_id = OBJECT_ID(N'[dbo].[TIS_CLIENTI]') AND type in (N'U'))
