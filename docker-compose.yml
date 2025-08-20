@@ -137,6 +137,8 @@ services:
     depends_on:
       init-db:
         condition: service_completed_successfully
+      auth:
+        condition: service_started
       clienti:
         condition: service_started
       prodotti:
