@@ -1,0 +1,37 @@
+#secret solo di sviluppo, in prod secrets
+auth:
+  jwt:
+    issuer: magazzino-auth
+    access-minutes: 15
+    refresh-days: 7
+    allowed-skew-seconds: 60
+
+spring:
+  application:
+    name: AuthService
+
+  datasource:
+    url: jdbc:sqlserver://sqlserver-db:1433;databaseName=DBMAGAZZINI;encrypt=true;trustServerCertificate=true
+    username: admin
+    password: magazzinetto34
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServerDialect
+
+server:
+  port: 8080
+  
+  
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://magazzino-eureka:8761/eureka

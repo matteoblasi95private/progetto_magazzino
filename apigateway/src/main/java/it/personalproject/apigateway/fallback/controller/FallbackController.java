@@ -24,5 +24,10 @@ public class FallbackController {
 	public Mono<Map<String,String>> fallbackClienti() {
 	    return Mono.just(Map.of("message","Servizio Clienti non disponibile"));
 	}
+	
+	@GetMapping("/fallback/auth")
+	public Mono<Map<String,String>> fallbackAuth() {
+	    return Mono.just(Map.of("message","Servizio Auth non disponibile"));
+	}
 
 }

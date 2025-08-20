@@ -35,6 +35,30 @@ services:
       "
         
     restart: "no"
+    
+  auth:
+    build:
+      context: ./AuthService
+    container_name: authcontainer
+    environment: 
+      SPRING_DATASOURCE_URL: "jdbc:sqlserver://sqlserver-db:1433;databaseName=DBMAGAZZINI;encrypt=true;trustServerCertificate=true"
+      SPRING_DATASOURCE_USERNAME: "admin"
+      SPRING_DATASOURCE_PASSWORD: "Magazzinetto34*"
+      SPRING_JPA_HIBERNATE_NAMING_PHYSICAL_STRATEGY: "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"
+      SPRING_JPA_SHOW_SQL: "true"
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://magazzino-eureka:8761/eureka/"
+      AUTH_JWT_SECRET: "${AUTH_JWT_SECRET}"
+    ports:
+      - "8782:8080"
+    depends_on:
+      sqlserver-db:
+        condition: service_healthy
+      init-db:
+        condition: service_completed_successfully
+      magazzino-eureka:
+        condition: service_started
 
   clienti:
     build:
