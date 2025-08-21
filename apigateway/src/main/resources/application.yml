@@ -2,6 +2,11 @@ server:
   port: 8080
 
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          secret: ${AUTH_JWT_SECRET}
   application:
     name: apigateway
 
@@ -12,7 +17,7 @@ spring:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
       routes:
         - id: clienti
-          uri: lb://ClientiService
+          uri: lb://CLIENTISERVICE
           predicates:
             - Path=/api/clienti/**
           filters:
@@ -23,7 +28,7 @@ spring:
                 fallbackUri: forward:/fallback/clienti
 
         - id: prodotti
-          uri: lb://ProdottiService
+          uri: lb://PRODOTTISERVICE
           predicates:
             - Path=/api/prodotti/**
           filters:
@@ -34,7 +39,7 @@ spring:
                 fallbackUri: forward:/fallback/prodotti
 
         - id: ordini
-          uri: lb://OrdiniService
+          uri: lb://ORDINISERVICE
           predicates:
             - Path=/api/ordini/**
           filters:
@@ -45,9 +50,9 @@ spring:
                 fallbackUri: forward:/fallback/ordini
 
         - id: auth
-          uri: lb://AuthService
+          uri: lb://AUTHSERVICE
           predicates:
-            -Path="/api/auth/**"
+            - Path=/api/auth/**
           filters:
            - StripPrefix=1
            - name: CircuitBreaker

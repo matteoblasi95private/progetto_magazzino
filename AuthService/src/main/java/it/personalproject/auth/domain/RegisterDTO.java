@@ -50,6 +50,11 @@ public class RegisterDTO {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+	@Override
+	public String toString() {
+		return "RegisterDTO [username=" + username + ", password=" + password + ", email=" + email + ", phoneNumber="
+				+ phoneNumber + "]";
+	}
 	
 	
 	

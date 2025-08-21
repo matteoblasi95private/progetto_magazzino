@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,6 +28,8 @@ import it.personalproject.auth.repositories.UserRepository;
 @Service
 public class AuthServiceImpl implements AuthService {
 	
+	private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
+	
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
@@ -43,6 +47,8 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public LoginResponse login(LoginDTO loginDTO) {
+		
+		//logger.info("LOGIN UTENTE " + loginDTO);
 		
 		UsernamePasswordAuthenticationToken usernamePassword = UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword());
 		Authentication auth = authenticationManager.authenticate(usernamePassword);
@@ -62,6 +68,7 @@ public class AuthServiceImpl implements AuthService {
 	@Transactional(rollbackFor = Exception.class)
 	public LoginResponse register(RegisterDTO registerDTO) throws UserAlreadyPresentException, RoleNotFoundException {
 		
+		//logger.info("REGISTRAZIONE UTENTE " + registerDTO);
 		
 		Optional<TisUser> userOptional = userRepository.findById(registerDTO.getUsername());
 		
