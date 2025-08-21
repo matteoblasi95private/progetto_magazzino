@@ -1,10 +1,12 @@
 package it.personalproject.apigateway.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +17,7 @@ import reactor.core.publisher.Mono;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,12 +26,23 @@ import java.util.stream.Collectors;
 public class SecurityConfig {
 
   // decodifica token jwt
-  @Bean
-  public ReactiveJwtDecoder jwtDecoder(org.springframework.core.env.Environment env) {
-    String secret = env.getProperty("spring.security.oauth2.resourceserver.jwt.secret");
-    SecretKey key = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-    return NimbusReactiveJwtDecoder.withSecretKey(key).build();
-  }
+  
+	@Bean
+	public ReactiveJwtDecoder jwtDecoder(
+	    @Value("${spring.security.oauth2.resourceserver.jwt.secret}") String secret) {
+
+	  SecretKey key;
+	  try {
+	    key = new SecretKeySpec(Base64.getDecoder().decode(secret), "HmacSHA256");
+	  } catch (IllegalArgumentException e) {
+	    key = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+	  }
+
+	  return NimbusReactiveJwtDecoder
+	      .withSecretKey(key)
+	      .macAlgorithm(MacAlgorithm.HS256)
+	      .build();
+	}
 
   // Converte il claim roles in authorities
   private Converter<Jwt, Mono<AbstractAuthenticationToken>> jwtAuthConverter() {
