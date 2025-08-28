@@ -1,6 +1,7 @@
 package it.personalproject.spedizioni.controller;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,9 +91,9 @@ public class SpedizioniController {
 	}
 	
 	@GetMapping("/{id}/storico")
-	public ResponseEntity<List<StoricoSpedizioniModel>> getStoricoSpedizione(@PathVariable("id") Integer id) {
+	public ResponseEntity<Collection<StoricoSpedizioniModel>> getStoricoSpedizione(@PathVariable("id") Integer id) {
 	
-		List<StoricoSpedizioniModel> storico = spedizioniService.getStoricoSpedizione(id);
+		Collection<StoricoSpedizioniModel> storico = spedizioniService.getStoricoSpedizione(id);
 		
 		return ResponseEntity
 	            .status(HttpStatus.OK)
