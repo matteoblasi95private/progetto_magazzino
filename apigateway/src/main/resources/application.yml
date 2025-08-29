@@ -59,6 +59,17 @@ spring:
              args:
                name: authCB
                fallbackUri: forward:/fallback/auth
+               
+        - id: spedizioni
+          uri: lb://SPEDIZIONISERVICE
+          predicates:
+            - Path=/api/spedizioni/**
+          filters:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: spedizioniCB
+                fallbackUri: forward:/fallback/spedizioni
 
       globalcors:
         corsConfigurations:

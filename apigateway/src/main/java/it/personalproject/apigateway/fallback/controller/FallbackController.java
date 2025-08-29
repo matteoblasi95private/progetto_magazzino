@@ -10,6 +10,12 @@ import reactor.core.publisher.Mono;
 @RestController
 public class FallbackController {
 	
+	
+	@GetMapping("/fallback/spedizioni")
+	public Mono<Map<String,String>> fallbackSpedizioni() {
+	    return Mono.just(Map.of("message","Servizio Spedizioni non disponibile"));
+	}
+	
 	@GetMapping("/fallback/ordini")
 	public Mono<Map<String,String>> fallbackOrdini() {
 	    return Mono.just(Map.of("message","Servizio Ordini non disponibile"));
