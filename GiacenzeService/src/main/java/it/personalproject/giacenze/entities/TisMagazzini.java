@@ -1,4 +1,4 @@
-package it.personalproject.magazzini.entities;
+package it.personalproject.giacenze.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -53,7 +53,6 @@ public class TisMagazzini {
     // --- getter e setter ---
     
     public Integer getId() { return id; }
-    
     public String getCodice() {
 		return codice;
 	}

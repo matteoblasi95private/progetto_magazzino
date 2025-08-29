@@ -1,21 +1,20 @@
-package it.personalproject.magazzini.converters;
+package it.personalproject.giacenze.converters;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
-import it.personalproject.magazzini.domain.MagazzinoModel;
-import it.personalproject.magazzini.entities.TisMagazzini;
-
+import it.personalproject.giacenze.domain.MagazzinoModel;
+import it.personalproject.giacenze.entities.TisMagazzini;
 @Service
-public class MagazziniEntityToMagazziniModelConverter implements Converter<TisMagazzini, MagazzinoModel>{
+public class MagazziniModelToMagazziniEntityConverter implements Converter<MagazzinoModel,TisMagazzini> {
 
 	@Override
-	public MagazzinoModel convert(TisMagazzini source) {
+	public TisMagazzini convert(MagazzinoModel source) {
 		
-		MagazzinoModel result = null;
+		TisMagazzini result = null;
 		
 		if(source != null) {
-			result = new MagazzinoModel();
+			result = new TisMagazzini();
 			result.setAttivo(source.getAttivo());
 			result.setCitta(source.getCitta());
 			result.setCodice(source.getCodice());

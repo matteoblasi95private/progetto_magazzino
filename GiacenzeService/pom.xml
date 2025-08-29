@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>it.personalproject</groupId>
-	<artifactId>MagazziniService</artifactId>
+	<artifactId>GiacenzeService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Magazzini Service</name>
-	<description>Magazzini Service</description>
+	<name>Giacenze Service</name>
+	<description>Giacenze Service</description>
 	<url/>
 	<licenses>
 		<license/>

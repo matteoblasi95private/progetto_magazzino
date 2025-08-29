@@ -11,8 +11,23 @@ public class MagazziniModelToMagazziniEntityConverter implements Converter<Magaz
 
 	@Override
 	public TisMagazzini convert(MagazzinoModel source) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		TisMagazzini result = null;
+		
+		if(source != null) {
+			result = new TisMagazzini();
+			result.setAttivo(source.getAttivo());
+			result.setCitta(source.getCitta());
+			result.setCodice(source.getCodice());
+			result.setDataCreazione(source.getDataCreazione());
+			result.setId(source.getId());
+			result.setIndirizzo(source.getIndirizzo());
+			result.setNome(source.getNome());
+			result.setPaese(source.getPaese());
+		}
+		
+		return result;
+		
 	}
 
 }

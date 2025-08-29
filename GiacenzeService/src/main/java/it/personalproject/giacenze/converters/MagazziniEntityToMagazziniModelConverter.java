@@ -1,10 +1,11 @@
-package it.personalproject.magazzini.converters;
+package it.personalproject.giacenze.converters;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
-import it.personalproject.magazzini.domain.MagazzinoModel;
-import it.personalproject.magazzini.entities.TisMagazzini;
+import it.personalproject.giacenze.domain.MagazzinoModel;
+import it.personalproject.giacenze.entities.TisMagazzini;
+
 
 @Service
 public class MagazziniEntityToMagazziniModelConverter implements Converter<TisMagazzini, MagazzinoModel>{
