@@ -25,6 +25,16 @@ public class FallbackController {
 	    return Mono.just(Map.of("message","Servizio Clienti non disponibile"));
 	}
 	
+	@GetMapping("/fallback/giacenze")
+	public Mono<Map<String,String>> fallbackGiacenze() {
+	    return Mono.just(Map.of("message","Servizio Giacenze non disponibile"));
+	}
+	
+	@GetMapping("/fallback/magazzini")
+	public Mono<Map<String,String>> fallbackMagazzini() {
+	    return Mono.just(Map.of("message","Servizio Magazzini non disponibile"));
+	}
+	
 	@GetMapping("/fallback/auth")
 	public Mono<Map<String,String>> fallbackAuth() {
 	    return Mono.just(Map.of("message","Servizio Auth non disponibile"));

@@ -49,6 +49,24 @@ spring:
                 name: ordiniCB
                 fallbackUri: forward:/fallback/ordini
 
+        - id: magazzini
+          uri: lb://MAGAZZINISERVICE
+          predicates:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: magazziniCB
+                fallbackUri: forward:/fallback/magazzini
+                
+        - id: giacenze
+          uri: lb://GIACENZESERVICE
+          predicates:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: magazziniCB
+                fallbackUri: forward:/fallback/giacenze
+
         - id: auth
           uri: lb://AUTHSERVICE
           predicates:
