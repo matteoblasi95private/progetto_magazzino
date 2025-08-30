@@ -15,26 +15,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 15
-      start_period: 20s
-      
-  
-  init-db:
-    image: mcr.microsoft.com/mssql-tools
-    container_name: initdbcontainer
-    depends_on:
-      sqlserver-db:
-        condition: service_healthy
-    environment:
-      SA_PASSWORD: "${SA_PASSWORD}"
-    volumes:
-      - ./db/init.sql:/init.sql:ro
-      
-    entrypoint: >
-      /bin/bash -c "
-      /opt/mssql-tools/bin/sqlcmd -S sqlserver-db -U sa -P \"$$SA_PASSWORD\" -b -i /init.sql
-      "
-        
-    restart: "no"
+      start_period: 60s
     
   kafka:
     image: docker.io/bitnami/kafka:3.8
@@ -73,7 +54,8 @@ services:
     build:
       context: ./AuthService
     container_name: authcontainer
-    environment: 
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       SPRING_DATASOURCE_URL: "jdbc:sqlserver://sqlserver-db:1433;databaseName=DBMAGAZZINI;encrypt=true;trustServerCertificate=true"
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "Magazzinetto34*"
@@ -88,8 +70,6 @@ services:
     depends_on:
       sqlserver-db:
         condition: service_healthy
-      init-db:
-        condition: service_completed_successfully
       magazzino-eureka:
         condition: service_started
 
@@ -98,7 +78,8 @@ services:
       context: ./ClientiService
           
     container_name: clienticontainer
-    environment: 
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       SPRING_DATASOURCE_URL: "jdbc:sqlserver://sqlserver-db:1433;databaseName=DBMAGAZZINI;encrypt=true;trustServerCertificate=true"
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "Magazzinetto34*"
@@ -112,15 +93,14 @@ services:
     depends_on:
       sqlserver-db:
         condition: service_healthy
-      init-db:
-        condition: service_completed_successfully
       magazzino-eureka:
         condition: service_started
   prodotti:
     build:
       context: ./ProdottiService
     container_name: prodotticontainer
-    environment: 
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       SPRING_DATASOURCE_URL: "jdbc:sqlserver://sqlserver-db:1433;databaseName=DBMAGAZZINI;encrypt=true;trustServerCertificate=true"
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "Magazzinetto34*"
@@ -134,8 +114,6 @@ services:
     depends_on:
       sqlserver-db:
         condition: service_healthy
-      init-db:
-        condition: service_completed_successfully
       magazzino-eureka:
         condition: service_healthy
   ordini:
@@ -143,6 +121,7 @@ services:
       context: ./OrdiniService
     container_name: ordinicontainer
     environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       SPRING_DATASOURCE_URL: "jdbc:sqlserver://sqlserver-db:1433;databaseName=DBMAGAZZINI;encrypt=true;trustServerCertificate=true"
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "Magazzinetto34*"
@@ -156,8 +135,6 @@ services:
     depends_on:
       sqlserver-db:
         condition: service_healthy
-      init-db:
-        condition: service_completed_successfully
       magazzino-eureka:
         condition: service_healthy
         
@@ -166,6 +143,7 @@ services:
       context: ./SpedizioniService
     container_name: spedizionicontainer
     environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       SPRING_DATASOURCE_URL: "jdbc:sqlserver://sqlserver-db:1433;databaseName=DBMAGAZZINI;encrypt=true;trustServerCertificate=true"
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "Magazzinetto34*"
@@ -179,8 +157,6 @@ services:
     depends_on:
       sqlserver-db:
         condition: service_healthy
-      init-db:
-        condition: service_completed_successfully
       magazzino-eureka:
         condition: service_healthy
         
@@ -190,6 +166,7 @@ services:
       context: ./MagazziniService
     container_name: magazzinicontainer
     environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       SPRING_DATASOURCE_URL: "jdbc:sqlserver://sqlserver-db:1433;databaseName=DBMAGAZZINI;encrypt=true;trustServerCertificate=true"
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "Magazzinetto34*"
@@ -203,8 +180,6 @@ services:
     depends_on:
       sqlserver-db:
         condition: service_healthy
-      init-db:
-        condition: service_completed_successfully
       magazzino-eureka:
         condition: service_healthy
   
@@ -213,6 +188,7 @@ services:
       context: ./GiacenzeService
     container_name: giacenzecontainer
     environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       SPRING_DATASOURCE_URL: "jdbc:sqlserver://sqlserver-db:1433;databaseName=DBMAGAZZINI;encrypt=true;trustServerCertificate=true"
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "Magazzinetto34*"
@@ -226,8 +202,6 @@ services:
     depends_on:
       sqlserver-db:
         condition: service_healthy
-      init-db:
-        condition: service_completed_successfully
       magazzino-eureka:
         condition: service_healthy      
   
@@ -236,12 +210,11 @@ services:
       context: ./apigateway
     container_name: apigatewaycontainer
     environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       AUTH_JWT_SECRET: "${AUTH_JWT_SECRET}"
     ports:
       - "8088:8080"
     depends_on:
-      init-db:
-        condition: service_completed_successfully
       auth:
         condition: service_started
       clienti:

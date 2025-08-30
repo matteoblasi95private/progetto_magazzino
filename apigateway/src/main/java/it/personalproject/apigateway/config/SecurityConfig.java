@@ -1,9 +1,13 @@
 package it.personalproject.apigateway.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -11,19 +15,25 @@ import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Configuration
+//@Profile("prod")
 public class SecurityConfig {
+	
+	@Autowired
+    private Environment env;
 
   // decodifica token jwt
   
@@ -57,9 +67,29 @@ public class SecurityConfig {
       return Mono.just(new JwtAuthenticationToken(jwt, auths));
     };
   }
+  
+  @Bean
+  @Profile("dev")
+  public SecurityWebFilterChain devSecurityFilterChain(ServerHttpSecurity http) {
+      return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
+                 .authorizeExchange(reg -> reg.anyExchange().permitAll())
+                 .build();
+  }
 
   @Bean
-  public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+  @Profile("!dev")
+  public SecurityWebFilterChain prodSecurityFilterChain(ServerHttpSecurity http) {
+	  
+//	String activeProfile = Arrays.stream(env.getActiveProfiles())
+//              .findFirst()
+//              .orElse("default");
+//		
+//	if ("dev".equals(activeProfile)) {
+//	      return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
+//          .authorizeExchange(reg -> reg.anyExchange().permitAll())
+//          .build();
+//	}
+	  
     return http
       .csrf(ServerHttpSecurity.CsrfSpec::disable)
       .authorizeExchange(reg -> reg
