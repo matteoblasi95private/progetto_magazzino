@@ -29,8 +29,6 @@ public class SpedizioniModelToOrdiniEntityConverter implements Converter<Spedizi
 		
 		if(source != null) {
 			
-			result.setAltezzaCm(source.getAltezzaCm());
-			result.setAssicurazione(source.getAssicurazione());
 			result.setCostoSpedizione(source.getCostoSpedizione());
 			result.setDataAggiornamento(source.getDataAggiornamento());
 			result.setDataConsegnaEffettiva(source.getDataConsegnaEffettiva());
@@ -43,10 +41,6 @@ public class SpedizioniModelToOrdiniEntityConverter implements Converter<Spedizi
 			result.setDestNome(source.getDestNome());
 			result.setDestPaese(source.getDestPaese());
 			result.setDestProvincia(source.getDestProvincia());
-			result.setLarghezzaCm(source.getLarghezzaCm());
-			result.setLunghezzaCm(source.getLunghezzaCm());
-			result.setPesoKg(source.getPesoKg());
-			result.setServizio(source.getServizio());
 			result.setTrackingNumber(source.getTrackingNumber());
 			
 			

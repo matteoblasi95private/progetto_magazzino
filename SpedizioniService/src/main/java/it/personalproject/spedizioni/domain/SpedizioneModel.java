@@ -13,15 +13,8 @@ public class SpedizioneModel {
     private Integer idStato;
 
     private String trackingNumber;
-    private String servizio;
 
     private BigDecimal costoSpedizione;
-    private BigDecimal assicurazione;
-
-    private BigDecimal pesoKg;
-    private BigDecimal lunghezzaCm;
-    private BigDecimal larghezzaCm;
-    private BigDecimal altezzaCm;
 
     private String destNome;
     private String destIndirizzo;
@@ -56,26 +49,8 @@ public class SpedizioneModel {
     public String getTrackingNumber() { return trackingNumber; }
     public void setTrackingNumber(String trackingNumber) { this.trackingNumber = trackingNumber; }
 
-    public String getServizio() { return servizio; }
-    public void setServizio(String servizio) { this.servizio = servizio; }
-
     public BigDecimal getCostoSpedizione() { return costoSpedizione; }
     public void setCostoSpedizione(BigDecimal costoSpedizione) { this.costoSpedizione = costoSpedizione; }
-
-    public BigDecimal getAssicurazione() { return assicurazione; }
-    public void setAssicurazione(BigDecimal assicurazione) { this.assicurazione = assicurazione; }
-
-    public BigDecimal getPesoKg() { return pesoKg; }
-    public void setPesoKg(BigDecimal pesoKg) { this.pesoKg = pesoKg; }
-
-    public BigDecimal getLunghezzaCm() { return lunghezzaCm; }
-    public void setLunghezzaCm(BigDecimal lunghezzaCm) { this.lunghezzaCm = lunghezzaCm; }
-
-    public BigDecimal getLarghezzaCm() { return larghezzaCm; }
-    public void setLarghezzaCm(BigDecimal larghezzaCm) { this.larghezzaCm = larghezzaCm; }
-
-    public BigDecimal getAltezzaCm() { return altezzaCm; }
-    public void setAltezzaCm(BigDecimal altezzaCm) { this.altezzaCm = altezzaCm; }
 
     public String getDestNome() { return destNome; }
     public void setDestNome(String destNome) { this.destNome = destNome; }

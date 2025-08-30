@@ -18,8 +18,6 @@ public class SpedizioniEntityToOrdiniModelConverter implements Converter<TisSped
 		
 		if(source != null) {
 			
-			result.setAltezzaCm(source.getAltezzaCm());
-			result.setAssicurazione(source.getAssicurazione());
 			result.setCostoSpedizione(source.getCostoSpedizione());
 			result.setDataAggiornamento(source.getDataAggiornamento());
 			result.setDataConsegnaEffettiva(source.getDataConsegnaEffettiva());
@@ -34,10 +32,6 @@ public class SpedizioniEntityToOrdiniModelConverter implements Converter<TisSped
 			result.setDestProvincia(source.getDestProvincia());
 			result.setIdOrdine(source.getOrdine().getId());
 			result.setIdStato(source.getStato().getId());
-			result.setLarghezzaCm(source.getLarghezzaCm());
-			result.setLunghezzaCm(source.getLunghezzaCm());
-			result.setPesoKg(source.getPesoKg());
-			result.setServizio(source.getServizio());
 			result.setTrackingNumber(source.getTrackingNumber());
 			
 		}

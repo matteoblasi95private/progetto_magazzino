@@ -24,33 +24,15 @@ public class TisSpedizioni {
     private TisCorrieri corriere;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "IdStato", nullable = false)
+    @JoinColumn(name = "IdStatoSpedizione", nullable = false)
     private TisSpedizioneStato stato;
 
     // Dati spedizione
     @Column(name = "TrackingNumber", nullable = false, unique = true, length = 80)
     private String trackingNumber;
 
-    @Column(name = "Servizio", length = 60)
-    private String servizio;
-
     @Column(name = "CostoSpedizione", nullable = false, precision = 10, scale = 2)
     private BigDecimal costoSpedizione = BigDecimal.ZERO;
-
-    @Column(name = "Assicurazione", precision = 10, scale = 2)
-    private BigDecimal assicurazione;
-
-    @Column(name = "PesoKg", precision = 10, scale = 3)
-    private BigDecimal pesoKg;
-
-    @Column(name = "LunghezzaCm", precision = 10, scale = 2)
-    private BigDecimal lunghezzaCm;
-
-    @Column(name = "LarghezzaCm", precision = 10, scale = 2)
-    private BigDecimal larghezzaCm;
-
-    @Column(name = "AltezzaCm", precision = 10, scale = 2)
-    private BigDecimal altezzaCm;
 
     // Indirizzo di destinazione (snapshot)
     @Column(name = "DestNome", nullable = false, length = 150)
@@ -114,26 +96,8 @@ public class TisSpedizioni {
     public String getTrackingNumber() { return trackingNumber; }
     public void setTrackingNumber(String trackingNumber) { this.trackingNumber = trackingNumber; }
 
-    public String getServizio() { return servizio; }
-    public void setServizio(String servizio) { this.servizio = servizio; }
-
     public BigDecimal getCostoSpedizione() { return costoSpedizione; }
     public void setCostoSpedizione(BigDecimal costoSpedizione) { this.costoSpedizione = costoSpedizione; }
-
-    public BigDecimal getAssicurazione() { return assicurazione; }
-    public void setAssicurazione(BigDecimal assicurazione) { this.assicurazione = assicurazione; }
-
-    public BigDecimal getPesoKg() { return pesoKg; }
-    public void setPesoKg(BigDecimal pesoKg) { this.pesoKg = pesoKg; }
-
-    public BigDecimal getLunghezzaCm() { return lunghezzaCm; }
-    public void setLunghezzaCm(BigDecimal lunghezzaCm) { this.lunghezzaCm = lunghezzaCm; }
-
-    public BigDecimal getLarghezzaCm() { return larghezzaCm; }
-    public void setLarghezzaCm(BigDecimal larghezzaCm) { this.larghezzaCm = larghezzaCm; }
-
-    public BigDecimal getAltezzaCm() { return altezzaCm; }
-    public void setAltezzaCm(BigDecimal altezzaCm) { this.altezzaCm = altezzaCm; }
 
     public String getDestNome() { return destNome; }
     public void setDestNome(String destNome) { this.destNome = destNome; }
