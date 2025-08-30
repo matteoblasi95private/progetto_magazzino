@@ -19,12 +19,12 @@ public class TisGiacenze {
 	@EmbeddedId
 	private TisGiacenzePK giacenzePK;
 
-	@MapsId("IdMagazzino")
+	@MapsId("idMagazzino")
 	@ManyToOne
 	@JoinColumn(name = "IdMagazzino")
 	private TisMagazzini magazzino;
 
-	@MapsId("IdProdotto")
+	@MapsId("idProdotto")
 	@ManyToOne
 	@JoinColumn(name = "IdProdotto")
 	private TisProdotti prodotto;

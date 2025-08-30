@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.personalproject.giacenze.converters.MagazziniModelToMagazziniEntityConverter;
@@ -16,6 +17,7 @@ import it.personalproject.giacenze.domain.StoricoMagazzinoModel;
 import it.personalproject.giacenze.entities.TisMagazzinoStoricoMovimenti;
 import it.personalproject.giacenze.repositories.StoricoMagazziniRepository;
 
+@Service
 public class StoricoServiceImpl implements StoricoService {
 	
 	@Autowired

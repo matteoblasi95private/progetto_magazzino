@@ -23,7 +23,7 @@ public interface GiacenzeRepository extends JpaRepository<TisGiacenze, TisGiacen
 	public Collection<TisGiacenze> getListaStockProdotto(@Param("idProdotto") Integer idProdotto);
 	
 	
-	@Query(value = "SELECT g FROM TisGiacenze g inner join g.magazzino m p where g.giacenzePK.idProdotto = = :idProdotto and g.quantitaDisponibile > 0")
+	@Query(value = "SELECT m FROM TisGiacenze g inner join g.magazzino m where g.giacenzePK.idProdotto = :idProdotto and g.quantitaDisponibile > 0")
 	public Collection<TisMagazzini> getListaMagazziniDisponibilitaProdotto(@Param("idProdotto") Integer idProdotto);
 
 }

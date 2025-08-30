@@ -52,6 +52,8 @@ spring:
         - id: magazzini
           uri: lb://MAGAZZINISERVICE
           predicates:
+            - Path=/api/magazzini/**
+          filters:
             - StripPrefix=1
             - name: CircuitBreaker
               args:
@@ -61,6 +63,8 @@ spring:
         - id: giacenze
           uri: lb://GIACENZESERVICE
           predicates:
+            - Path=/api/giacenze/**
+          filters:
             - StripPrefix=1
             - name: CircuitBreaker
               args:
