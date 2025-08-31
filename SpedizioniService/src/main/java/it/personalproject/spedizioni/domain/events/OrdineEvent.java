@@ -4,9 +4,17 @@ import it.personalproject.spedizioni.domain.OrdineModel;
 
 public abstract class OrdineEvent {
 	
-	public OrdineModel ordine;
+	protected OrdineModel ordine;
 
 	public OrdineEvent(OrdineModel ordine) {
+		this.setOrdine(ordine);
+	}
+
+	public OrdineModel getOrdine() {
+		return ordine;
+	}
+
+	public void setOrdine(OrdineModel ordine) {
 		this.ordine = ordine;
 	}
 	

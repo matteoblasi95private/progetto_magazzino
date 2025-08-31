@@ -20,7 +20,7 @@ public class OrdiniEventKafkaInboundAdapter implements OrdiniEventKafkaListenerP
     }
 
     @Override
-    @KafkaListener(topics = "${kafka.ordini.channel}")
+    @KafkaListener(topics = "${spring.kafka.channels.ordini}", groupId="${spring.kafka.consumer.group-id}")
     public void onEvent(OrdineEvent e) {
         ordineEventHandler.handleEvent(e);
     }

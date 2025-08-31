@@ -1,6 +1,10 @@
 spring:
   application:
     name: OrdiniService
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
   datasource:
     url: jdbc:sqlserver://sqlserver-db:1433;databaseName=DBMAGAZZINI;encrypt=true;trustServerCertificate=true

@@ -4,10 +4,20 @@ import it.personalproject.ordini.domain.OrdineModel;
 
 public abstract class OrdineEvent {
 	
-	public OrdineModel ordine;
+	protected OrdineModel ordine;
 
 	public OrdineEvent(OrdineModel ordine) {
 		this.ordine = ordine;
 	}
+
+	public OrdineModel getOrdine() {
+		return ordine;
+	}
+
+	public void setOrdine(OrdineModel ordine) {
+		this.ordine = ordine;
+	}
+	
+	
 	
 }

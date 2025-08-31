@@ -1,6 +1,20 @@
 spring:
   application:
     name: SpedizioniService
+  kafka:
+    channels:
+      ordini: ordini-channel
+    consumer:
+      group-id: SpedizioniService
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties: 
+        spring:
+          json:
+            trusted:
+              packages: it.personalproject.spedizioni.domain.*
+                
 
   datasource:
     url: jdbc:sqlserver://sqlserver-db:1433;databaseName=DBMAGAZZINI;encrypt=true;trustServerCertificate=true
