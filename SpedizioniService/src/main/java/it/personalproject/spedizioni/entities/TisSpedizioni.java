@@ -15,49 +15,49 @@ public class TisSpedizioni {
     private Integer id;
 
     // FK
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IdOrdine", nullable = false)
     private TisOrdini ordine;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IdCorriere")
     private TisCorrieri corriere;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "IdStatoSpedizione", nullable = false)
     private TisSpedizioneStato stato;
 
     // Dati spedizione
-    @Column(name = "TrackingNumber", nullable = false, unique = true, length = 80)
+    @Column(name = "TrackingNumber")
     private String trackingNumber;
 
-    @Column(name = "CostoSpedizione", nullable = false, precision = 10, scale = 2)
+    @Column(name = "CostoSpedizione")
     private BigDecimal costoSpedizione = BigDecimal.ZERO;
 
     // Indirizzo di destinazione (snapshot)
-    @Column(name = "DestNome", nullable = false, length = 150)
+    @Column(name = "DestNome")
     private String destNome;
 
-    @Column(name = "DestIndirizzo", nullable = false, length = 255)
+    @Column(name = "DestIndirizzo")
     private String destIndirizzo;
 
-    @Column(name = "DestCap", nullable = false, length = 10)
+    @Column(name = "DestCap")
     private String destCap;
 
-    @Column(name = "DestCitta", nullable = false, length = 100)
+    @Column(name = "DestCitta")
     private String destCitta;
 
     @Column(name = "DestProvincia", length = 50)
     private String destProvincia;
 
-    @Column(name = "DestPaese", nullable = false, length = 100)
+    @Column(name = "DestPaese")
     private String destPaese;
 
     // Date
-    @Column(name = "DataCreazione", nullable = false, updatable = false)
+    @Column(name = "DataCreazione", updatable = false)
     private LocalDateTime dataCreazione;
 
-    @Column(name = "DataAggiornamento", nullable = false)
+    @Column(name = "DataAggiornamento")
     private LocalDateTime dataAggiornamento;
 
     @Column(name = "DataRitiro")
