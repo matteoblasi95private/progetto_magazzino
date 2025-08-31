@@ -22,11 +22,14 @@ public class TisOrdini {
 	
 	@ManyToOne
 	@JoinColumn(name = "IdCliente")
-	public TisClienti idCliente;
+	private TisClienti idCliente;
 	
 	@ManyToOne
 	@JoinColumn(name = "IdProdotto")
-	public TisProdotti idProdotto;
+	private TisProdotti idProdotto;
+	
+	@Column(name = "quantitaOrdinata", nullable = false)
+	private Integer quantitaOrdinata;
 	
 	@Column(name = "dataCreazione", updatable = false)
 	private LocalDateTime dataCreazione;
@@ -72,6 +75,14 @@ public class TisOrdini {
 
 	public void setDataAggiornamento(LocalDateTime dataAggiornamento) {
 		this.dataAggiornamento = dataAggiornamento;
+	}
+
+	public Integer getQuantitaOrdinata() {
+		return quantitaOrdinata;
+	}
+
+	public void setQuantitaOrdinata(Integer quantitaOrdinata) {
+		this.quantitaOrdinata = quantitaOrdinata;
 	}
 	
 	

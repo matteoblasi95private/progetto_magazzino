@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.personalproject.ordini.domain.CreaOrdineResponse;
 import it.personalproject.ordini.domain.OrdineModel;
 import it.personalproject.ordini.domain.OrdiniService;
 
@@ -30,11 +31,11 @@ public class OrdiniController {
 	}
 	
 	@PostMapping("/crea")
-	public ResponseEntity<OrdineModel> creaOrdine(@RequestBody OrdineModel ordine) {
+	public ResponseEntity<CreaOrdineResponse> creaOrdine(@RequestBody OrdineModel ordine) {
 		
-        OrdineModel nuovo = ordiniService.creaOrdine(ordine);
+        CreaOrdineResponse nuovo = ordiniService.creaOrdine(ordine);
 		
-		URI location = URI.create("/ordini/" + nuovo.getId());
+		URI location = URI.create("/ordini/" + nuovo.getOrdine().getId());
         return ResponseEntity.created(location).body(nuovo);
 		
 	}

@@ -1,6 +1,7 @@
 package it.personalproject.ordini.domain;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.personalproject.ordini.converters.OrdiniModelToOrdiniEntityConverter;
+import it.personalproject.ordini.domain.events.OrdineCreatedEvent;
+import it.personalproject.ordini.domain.ports.GiacenzePort;
+import it.personalproject.ordini.domain.ports.OrdiniEventPublisher;
 import it.personalproject.ordini.converters.OrdiniEntityToOrdiniModelConverter;
 import it.personalproject.ordini.entities.TisClienti;
 import it.personalproject.ordini.entities.TisOrdini;
@@ -32,28 +36,52 @@ public class OrdiniServiceImpl implements OrdiniService {
 	
 	private final OrdiniEntityToOrdiniModelConverter ordiniEntityToOrdiniModelConverter;
 	
+	private final GiacenzePort giacenzePort;
+	
+	private final OrdiniEventPublisher ordiniEventPublisher;
+	
 	@Autowired
-	public OrdiniServiceImpl(OrdiniRepository ordiniRepo, ClientiRepository clientiRepository, ProdottiRepository prodottiRepository, OrdiniModelToOrdiniEntityConverter ordiniModelToOrdiniEntityConv, OrdiniEntityToOrdiniModelConverter ordiniEntityToOrdiniModelConv) {
+	public OrdiniServiceImpl(OrdiniRepository ordiniRepo, ClientiRepository clientiRepository, ProdottiRepository prodottiRepository, OrdiniModelToOrdiniEntityConverter ordiniModelToOrdiniEntityConv, OrdiniEntityToOrdiniModelConverter ordiniEntityToOrdiniModelConv, GiacenzePort giacenzePort, OrdiniEventPublisher ordiniEventPublisher) {
 		this.ordiniRepository = ordiniRepo;
 		this.clientiRepository = clientiRepository;
 		this.prodottiRepository = prodottiRepository;
 		this.ordiniModelToOrdiniEntityConverter = ordiniModelToOrdiniEntityConv;
 		this.ordiniEntityToOrdiniModelConverter = ordiniEntityToOrdiniModelConv;
+		this.giacenzePort = giacenzePort;
+		this.ordiniEventPublisher = ordiniEventPublisher;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public OrdineModel creaOrdine(OrdineModel ordine) {
+	public CreaOrdineResponse creaOrdine(OrdineModel ordine) {
 		
-		TisOrdini ordineEntity = ordiniModelToOrdiniEntityConverter.convert(ordine);
+		validateOrdine(ordine);
 		
-		ordineEntity.setDataCreazione(LocalDateTime.now());
+		CreaOrdineResponse creaOrdineResponse = new CreaOrdineResponse();
 		
-		ordineEntity.setDataAggiornamento(LocalDateTime.now());
+		Collection<MagazzinoModel> magazziniDispOrdine = giacenzePort.getMagazziniConDisponibilitaProdotto(ordine.getIdProdotto(), ordine.getQuantitaOrdinata());
 		
-		ordineEntity = ordiniRepository.save(ordineEntity);
+		if(!magazziniDispOrdine.isEmpty()) {
+			
+			TisOrdini ordineEntity = ordiniModelToOrdiniEntityConverter.convert(ordine);
+			
+			ordineEntity.setDataCreazione(LocalDateTime.now());
+			
+			ordineEntity.setDataAggiornamento(LocalDateTime.now());
+			
+			ordineEntity = ordiniRepository.save(ordineEntity);
+			
+			creaOrdineResponse.setOrdine(ordiniEntityToOrdiniModelConverter.convert(ordineEntity));
+			creaOrdineResponse.setOrdineCreato(true);
+			
+			pubblicaEventoCreazioneOrdine(ordine, magazziniDispOrdine.stream().findFirst().orElseThrow(() -> new EntityNotFoundException("ERRORE CREAZIONE ORDINE - MAGAZZINO NON TROVATO")));
 		
-		return ordiniEntityToOrdiniModelConverter.convert(ordineEntity);
+		}
+		else {
+			creaOrdineResponse.setOrdineCreato(false);
+		}
+		
+		return creaOrdineResponse;
 		
 	}
 
@@ -139,6 +167,21 @@ public class OrdiniServiceImpl implements OrdiniService {
 		
 		return result;
 		
+	}
+	
+	private void validateOrdine(OrdineModel ordine) {
+		if(ordine.getIdCliente() == null || ordine.getIdProdotto() == null) {
+			throw new IllegalArgumentException("ERRORE CREAZIONE ORDINE - ID PRODOTTO O ID CLIENTE NON VALORIZZATI");
+		}
+		
+		if(ordine.getQuantitaOrdinata().compareTo(0) <= 0) {
+			throw new IllegalArgumentException("ERRORE CREAZIONE ORDINE - QUANTITA ORDINATA MINORE DI ZERO");
+		}
+	}
+	
+	private void pubblicaEventoCreazioneOrdine(OrdineModel ordine, MagazzinoModel magazzino) {
+		OrdineCreatedEvent ordineCreatoEvent = new OrdineCreatedEvent(ordine, magazzino);
+		ordiniEventPublisher.publish(ordineCreatoEvent);
 	}
 
 }

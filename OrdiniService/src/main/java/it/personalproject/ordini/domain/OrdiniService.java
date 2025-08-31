@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface OrdiniService {
 	
-	public OrdineModel creaOrdine(OrdineModel ordine);
+	public CreaOrdineResponse creaOrdine(OrdineModel ordine);
 	
 	public OrdineModel getOrdine(Integer id);
 	

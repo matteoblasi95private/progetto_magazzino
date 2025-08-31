@@ -9,6 +9,7 @@ public class OrdineModel {
 	private Integer id;
 	private Integer idCliente;
 	private Integer idProdotto;
+	private Integer quantitaOrdinata;
 	private StatoOrdine statoOrdine;
 	private LocalDateTime dataCreazione;
 	private LocalDateTime dataAggiornamento;
@@ -68,6 +69,14 @@ public class OrdineModel {
 
 	public void setIdProdotto(Integer idProdotto) {
 		this.idProdotto = idProdotto;
+	}
+
+	public Integer getQuantitaOrdinata() {
+		return quantitaOrdinata;
+	}
+
+	public void setQuantitaOrdinata(Integer quantitaOrdinata) {
+		this.quantitaOrdinata = quantitaOrdinata;
 	}
 	
 	
