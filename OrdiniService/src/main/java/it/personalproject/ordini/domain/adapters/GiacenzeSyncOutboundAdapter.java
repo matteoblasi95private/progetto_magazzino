@@ -10,18 +10,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import it.personalproject.ordini.domain.MagazzinoModel;
-import it.personalproject.ordini.domain.ports.GiacenzePort;
+import it.personalproject.ordini.domain.ports.GiacenzeOutboundPort;
 
 @Component
-public class GiacenzeSyncAdapter implements GiacenzePort {
+public class GiacenzeSyncOutboundAdapter implements GiacenzeOutboundPort {
 	
-    private static final Logger logger = LoggerFactory.getLogger(GiacenzeSyncAdapter.class);
+    private static final Logger logger = LoggerFactory.getLogger(GiacenzeSyncOutboundAdapter.class);
 	
 	private final String giacenzeUrl;
 	
 	private final WebClient webClient;
 	
-	public GiacenzeSyncAdapter(@Value("${giacenze.rest.url}") String giacenzeUrl, WebClient.Builder webClientBuilder) {
+	public GiacenzeSyncOutboundAdapter(@Value("${giacenze.rest.url}") String giacenzeUrl, WebClient.Builder webClientBuilder) {
 		this.giacenzeUrl = giacenzeUrl;
 		this.webClient = webClientBuilder.baseUrl(this.giacenzeUrl).build();
 	}

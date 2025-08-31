@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import it.personalproject.ordini.converters.OrdiniModelToOrdiniEntityConverter;
 import it.personalproject.ordini.domain.events.OrdineCreatedEvent;
-import it.personalproject.ordini.domain.ports.GiacenzePort;
-import it.personalproject.ordini.domain.ports.OrdiniEventPublisher;
+import it.personalproject.ordini.domain.ports.GiacenzeOutboundPort;
+import it.personalproject.ordini.domain.ports.OrdiniEventPublisherPort;
 import it.personalproject.ordini.converters.OrdiniEntityToOrdiniModelConverter;
 import it.personalproject.ordini.entities.TisClienti;
 import it.personalproject.ordini.entities.TisOrdini;
@@ -36,12 +36,12 @@ public class OrdiniServiceImpl implements OrdiniService {
 	
 	private final OrdiniEntityToOrdiniModelConverter ordiniEntityToOrdiniModelConverter;
 	
-	private final GiacenzePort giacenzePort;
+	private final GiacenzeOutboundPort giacenzePort;
 	
-	private final OrdiniEventPublisher ordiniEventPublisher;
+	private final OrdiniEventPublisherPort ordiniEventPublisher;
 	
 	@Autowired
-	public OrdiniServiceImpl(OrdiniRepository ordiniRepo, ClientiRepository clientiRepository, ProdottiRepository prodottiRepository, OrdiniModelToOrdiniEntityConverter ordiniModelToOrdiniEntityConv, OrdiniEntityToOrdiniModelConverter ordiniEntityToOrdiniModelConv, GiacenzePort giacenzePort, OrdiniEventPublisher ordiniEventPublisher) {
+	public OrdiniServiceImpl(OrdiniRepository ordiniRepo, ClientiRepository clientiRepository, ProdottiRepository prodottiRepository, OrdiniModelToOrdiniEntityConverter ordiniModelToOrdiniEntityConv, OrdiniEntityToOrdiniModelConverter ordiniEntityToOrdiniModelConv, GiacenzeOutboundPort giacenzePort, OrdiniEventPublisherPort ordiniEventPublisher) {
 		this.ordiniRepository = ordiniRepo;
 		this.clientiRepository = clientiRepository;
 		this.prodottiRepository = prodottiRepository;

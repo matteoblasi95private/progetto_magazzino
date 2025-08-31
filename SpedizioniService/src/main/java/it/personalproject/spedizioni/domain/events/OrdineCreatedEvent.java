@@ -1,7 +1,7 @@
-package it.personalproject.ordini.domain.events;
+package it.personalproject.spedizioni.domain.events;
 
-import it.personalproject.ordini.domain.MagazzinoModel;
-import it.personalproject.ordini.domain.OrdineModel;
+import it.personalproject.spedizioni.domain.MagazzinoModel;
+import it.personalproject.spedizioni.domain.OrdineModel;
 
 public class OrdineCreatedEvent extends OrdineEvent {
 	

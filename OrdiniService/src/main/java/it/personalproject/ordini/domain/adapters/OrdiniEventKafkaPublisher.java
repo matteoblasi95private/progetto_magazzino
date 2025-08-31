@@ -6,10 +6,10 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import it.personalproject.ordini.domain.events.OrdineEvent;
-import it.personalproject.ordini.domain.ports.OrdiniEventPublisher;
+import it.personalproject.ordini.domain.ports.OrdiniEventPublisherPort;
 
 @Component
-public class OrdiniEventKafkaPublisher implements OrdiniEventPublisher {
+public class OrdiniEventKafkaPublisher implements OrdiniEventPublisherPort {
 	
 	@Value("${kafka.ordini.channel}")
 	private String ordiniChannel;

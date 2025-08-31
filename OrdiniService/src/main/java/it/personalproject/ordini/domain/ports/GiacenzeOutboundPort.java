@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import it.personalproject.ordini.domain.MagazzinoModel;
 
-public interface GiacenzePort {
+public interface GiacenzeOutboundPort {
 	
 	public Collection<MagazzinoModel> getMagazziniConDisponibilitaProdotto(Integer idProdotto, Integer quantita);
 
