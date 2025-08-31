@@ -1,4 +1,4 @@
-package it.personalproject.spedizioni.domain.events;
+package it.personalproject.ordini.domain.events;
 
 public interface OrdineEventHandler {
 	

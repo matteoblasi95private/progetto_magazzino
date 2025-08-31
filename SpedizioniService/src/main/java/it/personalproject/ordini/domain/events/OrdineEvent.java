@@ -1,13 +1,17 @@
-package it.personalproject.spedizioni.domain.events;
+package it.personalproject.ordini.domain.events;
 
 import it.personalproject.spedizioni.domain.OrdineModel;
 
 public abstract class OrdineEvent {
 	
 	protected OrdineModel ordine;
+	
+	public OrdineEvent() {
+		
+	}
 
 	public OrdineEvent(OrdineModel ordine) {
-		this.setOrdine(ordine);
+		this.ordine = ordine;
 	}
 
 	public OrdineModel getOrdine() {
@@ -17,5 +21,12 @@ public abstract class OrdineEvent {
 	public void setOrdine(OrdineModel ordine) {
 		this.ordine = ordine;
 	}
+
+	@Override
+	public String toString() {
+		return "OrdineEvent [ordine=" + ordine + "]";
+	}
+	
+	
 	
 }

@@ -16,22 +16,22 @@ public class TisMagazzinoStoricoMovimenti {
     private TisMagazzini magazzino;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "IdProdotto", nullable = false)
+    @JoinColumn(name = "IdProdotto")
     private TisProdotti prodotto;
 
-    @Column(name = "QuantitaMovimento", nullable = false)
+    @Column(name = "QuantitaMovimento")
     private Integer quantitaMovimento;
 
-    @Column(name = "TipoMovimento", nullable = false)
+    @Column(name = "TipoMovimento")
     private String tipoMovimento;
 
     @Column(name = "Riferimento")
     private String riferimento;
 
-    @Column(name = "DataMovimento", nullable = false)
+    @Column(name = "DataMovimento")
     private LocalDateTime dataMovimento;
 
-    @Column(name = "Utente", nullable = false)
+    @Column(name = "Utente")
     private String utente;
 
     @Column(name = "Note")

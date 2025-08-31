@@ -20,7 +20,7 @@ public class TisSpedizioni {
     private TisOrdini ordine;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "IdCorriere", nullable = false)
+    @JoinColumn(name = "IdCorriere")
     private TisCorrieri corriere;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

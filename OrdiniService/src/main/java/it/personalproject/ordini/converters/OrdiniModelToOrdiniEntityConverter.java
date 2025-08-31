@@ -40,6 +40,8 @@ public class OrdiniModelToOrdiniEntityConverter implements Converter<OrdineModel
 				result.setIdProdotto(prodotto.get());
 			}
 			
+			result.setQuantitaOrdinata(source.getQuantitaOrdinata());
+			
 			
 		}
 		

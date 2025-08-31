@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(
-    name = "TIS_MAGAZZINO",
+    name = "TIS_MAGAZZINI",
     uniqueConstraints = {
         @UniqueConstraint(name = "UQ_MAGAZZINO_NOME", columnNames = "Codice")
     }

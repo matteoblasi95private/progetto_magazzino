@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.personalproject.giacenze.domain.GiacenzeModel;
@@ -21,11 +24,12 @@ import it.personalproject.giacenze.domain.MagazzinoModel;
 import it.personalproject.giacenze.domain.StoricoMagazzinoModel;
 import it.personalproject.giacenze.domain.TrasferimentoProdottoDTO;
 import it.personalproject.storico.StoricoService;
-import jakarta.ws.rs.QueryParam;
 
 @RestController
 @RequestMapping("/giacenze")
 public class GiacenzeController {
+	
+	private static final Logger log = LoggerFactory.getLogger(GiacenzeController.class);
 	
 	private final GiacenzeService giacenzeService;
 	
@@ -47,7 +51,7 @@ public class GiacenzeController {
 	}
 	
 	@GetMapping("/dettaglio")
-	public ResponseEntity<GiacenzeModel> getDettaglioStock(@QueryParam("idprodotto") Integer idProdotto, @QueryParam("idmagazzino") Integer idMagazzino) {
+	public ResponseEntity<GiacenzeModel> getDettaglioStock(@RequestParam("idprodotto") Integer idProdotto, @RequestParam("idmagazzino") Integer idMagazzino) {
 		
 		GiacenzeModel stock = giacenzeService.getDettaglioStock(idProdotto, idMagazzino);
 		
@@ -88,8 +92,10 @@ public class GiacenzeController {
 	}
 	
 	@GetMapping("/disponibilita")
-	public ResponseEntity<Collection<MagazzinoModel>> getMagazziniConDisponibilitaProdotto(@QueryParam("idprodotto") Integer idProdotto, @QueryParam("quantita") Integer quantita) {
+	public ResponseEntity<Collection<MagazzinoModel>> getMagazziniConDisponibilitaProdotto(@RequestParam("idprodotto") Integer idProdotto, @RequestParam("quantita") Integer quantita) {
 	
+		log.info("GIACENZE SERVICE - RICHIESTA DISPONIBILITA PRODOTTO: {}, quantita: {}", idProdotto, quantita);
+		
 		Collection<MagazzinoModel> magazziniDispProdotto = giacenzeService.getMagazziniConDisponibilitaProdotto(idProdotto, quantita);
 		
 		return ResponseEntity

@@ -1,9 +1,11 @@
-package it.personalproject.spedizioni.domain.events;
+package it.personalproject.ordini.domain.events;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 
 import it.personalproject.spedizioni.domain.SpedizioneModel;
 import it.personalproject.spedizioni.domain.SpedizioniService;
@@ -32,6 +34,7 @@ public class OrdineEventHandlerImpl implements OrdineEventHandler {
 			spedizione.setDestNome("test");
 			spedizione.setDestCap("00118");
 			spedizione.setIdStato(1);
+			spedizione.setCostoSpedizione(BigDecimal.valueOf(30));
 			
 			spedizioniService.creaSpedizione(spedizione);
 		}

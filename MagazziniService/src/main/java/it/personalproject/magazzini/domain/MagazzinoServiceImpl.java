@@ -48,7 +48,7 @@ public class MagazzinoServiceImpl implements MagazzinoService {
 				
 		magazzinoEntity = magazziniRepository.save(magazzinoEntity);
 		
-		scriviStoricoMagazzino(magazzinoEntity, "CREAZIONE");
+		//scriviStoricoMagazzino(magazzinoEntity, "CREAZIONE");
 		
 		return magazziniEntityToMagazziniModelConverter.convert(magazzinoEntity);
 		
@@ -117,6 +117,7 @@ public class MagazzinoServiceImpl implements MagazzinoService {
 	public void scriviStoricoMagazzino(TisMagazzini magazzino, String note) {
 		
 		TisMagazzinoStoricoMovimenti storico = new TisMagazzinoStoricoMovimenti();
+		storico.setMagazzino(magazzino);
 		storico.setDataMovimento(LocalDateTime.now());
 		storicoMagazziniRepository.save(storico);
 		

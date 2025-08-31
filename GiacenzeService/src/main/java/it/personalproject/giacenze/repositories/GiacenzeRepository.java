@@ -15,15 +15,15 @@ import it.personalproject.giacenze.entities.TisMagazzini;
 public interface GiacenzeRepository extends JpaRepository<TisGiacenze, TisGiacenzePK> {
 	
 	
-	@Query(value = "SELECT g FROM TisGiacenze g where g.giacenzePK.idMagazzino = :idMagazzino")
+	@Query(value = "SELECT g FROM TisGiacenze g inner join g.magazzino m where m.id = :idMagazzino")
 	public Collection<TisGiacenze> getListaStockMagazzino(@Param("idMagazzino") Integer idMagazzino);
 	
 	
-	@Query(value = "SELECT g FROM TisGiacenze g where g.giacenzePK.idProdotto = :idProdotto")
+	@Query(value = "SELECT g FROM TisGiacenze g inner join g.prodotto p where p.id = :idProdotto")
 	public Collection<TisGiacenze> getListaStockProdotto(@Param("idProdotto") Integer idProdotto);
 	
 	
-	@Query(value = "SELECT m FROM TisGiacenze g inner join g.magazzino m where g.giacenzePK.idProdotto = :idProdotto and g.quantitaDisponibile > 0")
-	public Collection<TisMagazzini> getListaMagazziniDisponibilitaProdotto(@Param("idProdotto") Integer idProdotto);
+	@Query(value = "SELECT m FROM TisGiacenze g inner join g.magazzino m inner join g.prodotto p where p.id = :idProdotto and g.quantitaDisponibile >= :quantita")
+	public Collection<TisMagazzini> getListaMagazziniDisponibilitaProdotto(@Param("idProdotto") Integer idProdotto, @Param("quantita") Integer quantita);
 
 }

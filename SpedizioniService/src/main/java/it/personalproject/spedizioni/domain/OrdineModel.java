@@ -78,6 +78,13 @@ public class OrdineModel {
 	public void setQuantitaOrdinata(Integer quantitaOrdinata) {
 		this.quantitaOrdinata = quantitaOrdinata;
 	}
+
+	@Override
+	public String toString() {
+		return "OrdineModel [id=" + id + ", idCliente=" + idCliente + ", idProdotto=" + idProdotto
+				+ ", quantitaOrdinata=" + quantitaOrdinata + ", statoOrdine=" + statoOrdine + ", dataCreazione="
+				+ dataCreazione + ", dataAggiornamento=" + dataAggiornamento + "]";
+	}
 	
 	
 	

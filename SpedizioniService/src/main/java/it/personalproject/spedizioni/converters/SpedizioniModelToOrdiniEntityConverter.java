@@ -29,6 +29,7 @@ public class SpedizioniModelToOrdiniEntityConverter implements Converter<Spedizi
 		
 		if(source != null) {
 			
+			result = new TisSpedizioni();
 			result.setCostoSpedizione(source.getCostoSpedizione());
 			result.setDataAggiornamento(source.getDataAggiornamento());
 			result.setDataConsegnaEffettiva(source.getDataConsegnaEffettiva());

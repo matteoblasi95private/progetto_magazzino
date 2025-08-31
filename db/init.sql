@@ -119,13 +119,15 @@ CREATE TABLE [dbo].[TIS_ORDINI](
 	[Id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	[IdCliente] [int] NULL,
 	[IdProdotto] [int] NULL,
+	[QuantitaOrdinata] [int] NOT NULL,
 	[IdStatoOrdine] [int] NULL,
 	[DataCreazione] [datetime] NULL,
 	[DataAggiornamento] [datetime] NULL,
 	CONSTRAINT [ORDINE_CLIENTE_FK] FOREIGN KEY([IdCliente])
 	REFERENCES [dbo].[TIS_CLIENTI] ([Id]),
 	CONSTRAINT [ORDINE_PRODOTTO_FK] FOREIGN KEY([IdProdotto])
-	REFERENCES [dbo].[TIS_PRODOTTI] ([Id])
+	REFERENCES [dbo].[TIS_PRODOTTI] ([Id]),
+	CONSTRAINT QT_ORD_MAGGIORE_ZERO CHECK (QuantitaOrdinata > 0)
 	
 );
 
@@ -133,6 +135,8 @@ CREATE INDEX IX_ORDINE_CLIENTE  ON dbo.TIS_ORDINI(IdCliente);
 CREATE INDEX IX_ORDINE_PRODOTTO ON dbo.TIS_PRODOTTI(IdProdotto);
 
 END
+GO
+
 
 
 IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE name='TIS_SPEDIZIONE_STATO' AND type='U')

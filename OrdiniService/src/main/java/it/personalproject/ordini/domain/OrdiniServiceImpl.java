@@ -71,13 +71,15 @@ public class OrdiniServiceImpl implements OrdiniService {
 			
 			ordineEntity = ordiniRepository.save(ordineEntity);
 			
-			creaOrdineResponse.setOrdine(ordiniEntityToOrdiniModelConverter.convert(ordineEntity));
+			ordine = ordiniEntityToOrdiniModelConverter.convert(ordineEntity);
+			creaOrdineResponse.setOrdine(ordine);
 			creaOrdineResponse.setOrdineCreato(true);
 			
 			pubblicaEventoCreazioneOrdine(ordine, magazziniDispOrdine.stream().findFirst().orElseThrow(() -> new EntityNotFoundException("ERRORE CREAZIONE ORDINE - MAGAZZINO NON TROVATO")));
 		
 		}
 		else {
+			creaOrdineResponse.setOrdine(ordine);
 			creaOrdineResponse.setOrdineCreato(false);
 		}
 		

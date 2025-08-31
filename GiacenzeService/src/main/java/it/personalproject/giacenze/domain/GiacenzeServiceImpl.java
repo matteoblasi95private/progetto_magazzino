@@ -5,10 +5,13 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.personalproject.giacenze.controller.ExceptionController;
 import it.personalproject.giacenze.converters.GiacenzaEntityToModelConverter;
 import it.personalproject.giacenze.converters.MagazziniEntityToMagazziniModelConverter;
 import it.personalproject.giacenze.converters.StoricoMagazziniEntityToModelConverter;
@@ -26,6 +29,8 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class GiacenzeServiceImpl implements GiacenzeService {
+	
+	private static final Logger log = LoggerFactory.getLogger(GiacenzeServiceImpl.class);
 	
 	@Autowired
 	private StoricoService storicoService;
@@ -79,6 +84,8 @@ public class GiacenzeServiceImpl implements GiacenzeService {
 		
 		TisGiacenze giacenzaEntity = new TisGiacenze();
 		
+		giacenzaEntity.setGiacenzePK(new TisGiacenzePK());
+						
 		giacenzaEntity.setMagazzino(optionalMagazzino.get());
 		
 		giacenzaEntity.setProdotto(optionalProdotto.get());
@@ -170,7 +177,9 @@ public class GiacenzeServiceImpl implements GiacenzeService {
 		
 		Collection<MagazzinoModel> listaMagazziniDisponibilita = new LinkedList<>();
 		
-		Collection<TisMagazzini> listaMagazziniEntitiesDisp = giacenzeRepository.getListaMagazziniDisponibilitaProdotto(idProdotto);
+		Collection<TisMagazzini> listaMagazziniEntitiesDisp = giacenzeRepository.getListaMagazziniDisponibilitaProdotto(idProdotto, quantita);
+		
+		log.info("GIACENZE SERVICE - RICHIESTA DISPONIBILITA PRODOTTO: {}, quantita: {}, TROVATA DISPONIBILITA MAGAZZINI: {}", idProdotto, quantita, listaMagazziniEntitiesDisp);
 		
 		if(!listaMagazziniEntitiesDisp.isEmpty()) {
 			listaMagazziniEntitiesDisp.stream().forEach(m -> listaMagazziniDisponibilita.add(magazziniEntityToModelConverter.convert(m)));

@@ -28,7 +28,7 @@ public class TisOrdini {
 	@JoinColumn(name = "IdProdotto")
 	private TisProdotti idProdotto;
 	
-	@Column(name = "quantitaOrdinata", nullable = false)
+	@Column(name = "QuantitaOrdinata", nullable = false)
 	private Integer quantitaOrdinata;
 	
 	@Column(name = "dataCreazione", updatable = false)

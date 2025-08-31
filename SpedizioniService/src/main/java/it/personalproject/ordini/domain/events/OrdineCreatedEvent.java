@@ -1,4 +1,4 @@
-package it.personalproject.spedizioni.domain.events;
+package it.personalproject.ordini.domain.events;
 
 import it.personalproject.spedizioni.domain.MagazzinoModel;
 import it.personalproject.spedizioni.domain.OrdineModel;
@@ -6,6 +6,10 @@ import it.personalproject.spedizioni.domain.OrdineModel;
 public class OrdineCreatedEvent extends OrdineEvent {
 	
 	private MagazzinoModel magazzinoOrdine;
+	
+	public OrdineCreatedEvent() {
+		
+	}
 
 	public OrdineCreatedEvent(OrdineModel ordine) {
 		super(ordine);
@@ -23,5 +27,12 @@ public class OrdineCreatedEvent extends OrdineEvent {
 	public void setMagazzinoOrdine(MagazzinoModel magazzinoOrdine) {
 		this.magazzinoOrdine = magazzinoOrdine;
 	}
+
+	@Override
+	public String toString() {
+		return "OrdineCreatedEvent [magazzinoOrdine=" + magazzinoOrdine + ", ordine=" + ordine + "]";
+	}
+	
+	
 
 }

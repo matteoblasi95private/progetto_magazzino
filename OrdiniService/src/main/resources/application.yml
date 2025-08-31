@@ -2,6 +2,8 @@ spring:
   application:
     name: OrdiniService
   kafka:
+    channels:
+      ordini: ordini-channel
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -30,3 +32,7 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://magazzino-eureka:8761/eureka
+      
+giacenze:
+  rest:
+    url: http://giacenze:8080

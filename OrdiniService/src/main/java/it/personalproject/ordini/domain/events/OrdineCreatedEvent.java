@@ -6,6 +6,10 @@ import it.personalproject.ordini.domain.OrdineModel;
 public class OrdineCreatedEvent extends OrdineEvent {
 	
 	private MagazzinoModel magazzinoOrdine;
+	
+	public OrdineCreatedEvent() {
+		
+	}
 
 	public OrdineCreatedEvent(OrdineModel ordine) {
 		super(ordine);
@@ -23,5 +27,12 @@ public class OrdineCreatedEvent extends OrdineEvent {
 	public void setMagazzinoOrdine(MagazzinoModel magazzinoOrdine) {
 		this.magazzinoOrdine = magazzinoOrdine;
 	}
+
+	@Override
+	public String toString() {
+		return "OrdineCreatedEvent [magazzinoOrdine=" + magazzinoOrdine + ", ordine=" + ordine + "]";
+	}
+	
+	
 
 }
