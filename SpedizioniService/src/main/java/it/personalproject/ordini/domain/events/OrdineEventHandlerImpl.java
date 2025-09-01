@@ -27,6 +27,7 @@ public class OrdineEventHandlerImpl implements OrdineEventHandler {
 			spedizione.setIdCliente(e.getOrdine().getIdCliente());
 			spedizione.setTrackingNumber("1");
 			spedizione.setDataConsegnaPrevista(LocalDateTime.now().plusDays(1));
+			spedizione.setDestPaese("Italy");
 			spedizione.setDestCitta("Roma");
 			spedizione.setDestProvincia("RM");
 			spedizione.setDataCreazione(LocalDateTime.now());
@@ -35,6 +36,7 @@ public class OrdineEventHandlerImpl implements OrdineEventHandler {
 			spedizione.setDestCap("00118");
 			spedizione.setIdStato(1);
 			spedizione.setCostoSpedizione(BigDecimal.valueOf(30));
+			spedizione.setIdCorriere(1);
 			
 			spedizioniService.creaSpedizione(spedizione);
 		}

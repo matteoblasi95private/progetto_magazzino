@@ -8,19 +8,23 @@ import org.springframework.stereotype.Service;
 
 import it.personalproject.spedizioni.domain.SpedizioneModel;
 import it.personalproject.spedizioni.entities.TisSpedizioni;
+import it.personalproject.spedizioni.repositories.CorrieriRepository;
 import it.personalproject.spedizioni.repositories.OrdiniRepository;
 import it.personalproject.spedizioni.repositories.SpedizioniRepository;
 import it.personalproject.spedizioni.repositories.StatoSpedizioneRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class SpedizioniModelToOrdiniEntityConverter implements Converter<SpedizioneModel, TisSpedizioni>{
+public class SpedizioniModelToSpedizioniEntityConverter implements Converter<SpedizioneModel, TisSpedizioni>{
 	
 	@Autowired
 	private StatoSpedizioneRepository statoSpedizioneRepository;
 	
 	@Autowired
 	private OrdiniRepository ordiniRepository;
+	
+	@Autowired
+	private CorrieriRepository corrieriRepository;
 
 	@Override
 	public TisSpedizioni convert(SpedizioneModel source) {
@@ -51,6 +55,10 @@ public class SpedizioniModelToOrdiniEntityConverter implements Converter<Spedizi
 			
 			if(source.getIdStato() != null) {
 				result.setStato(statoSpedizioneRepository.findById(source.getIdStato()).orElseThrow(() -> new EntityNotFoundException("STATO NON TROVATO ASSOCIATO A ID " + source.getIdStato())));
+			}
+			
+			if(source.getIdCorriere() != null) {
+				result.setCorriere(corrieriRepository.findById(source.getIdCorriere()).orElseThrow(() -> new EntityNotFoundException("CORRIERE NON TROVATO ASSOCIATO A ID " + source.getIdCorriere())));
 			}
 			
 			

@@ -9,7 +9,7 @@ import it.personalproject.spedizioni.domain.SpedizioneModel;
 import it.personalproject.spedizioni.entities.TisSpedizioni;
 
 @Service
-public class SpedizioniEntityToOrdiniModelConverter implements Converter<TisSpedizioni, SpedizioneModel>{
+public class SpedizioniEntityToSpedizioniModelConverter implements Converter<TisSpedizioni, SpedizioneModel>{
 
 	@Override
 	public SpedizioneModel convert(TisSpedizioni source) {
@@ -17,7 +17,7 @@ public class SpedizioniEntityToOrdiniModelConverter implements Converter<TisSped
 		SpedizioneModel result = null;
 		
 		if(source != null) {
-			
+			result = new SpedizioneModel();
 			result.setCostoSpedizione(source.getCostoSpedizione());
 			result.setDataAggiornamento(source.getDataAggiornamento());
 			result.setDataConsegnaEffettiva(source.getDataConsegnaEffettiva());

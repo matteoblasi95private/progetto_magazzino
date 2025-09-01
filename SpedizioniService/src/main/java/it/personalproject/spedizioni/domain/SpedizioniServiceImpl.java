@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import it.personalproject.spedizioni.converters.SpedizioniEntityToOrdiniModelConverter;
-import it.personalproject.spedizioni.converters.SpedizioniModelToOrdiniEntityConverter;
+import it.personalproject.spedizioni.converters.SpedizioniEntityToSpedizioniModelConverter;
+import it.personalproject.spedizioni.converters.SpedizioniModelToSpedizioniEntityConverter;
 import it.personalproject.spedizioni.converters.StoricoSpedizioniEntityToModelConverter;
 import it.personalproject.spedizioni.entities.TisSpedizioni;
 import it.personalproject.spedizioni.entities.TisSpedizioniStorico;
@@ -30,19 +30,19 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 	
 	private final StatoSpedizioneRepository statoSpedizioneRepository;
 	
-	private final SpedizioniModelToOrdiniEntityConverter spedizioniModelToOrdiniEntityConverter;
+	private final SpedizioniModelToSpedizioniEntityConverter spedizioniModelToSpedizioniEntityConverter;
 	
-	private final SpedizioniEntityToOrdiniModelConverter spedizioniEntityToOrdiniModelConverter;
+	private final SpedizioniEntityToSpedizioniModelConverter spedizioniEntityToSpedizioniModelConverter;
 	
 	private final StoricoSpedizioniEntityToModelConverter storicoSpedizioniEntityToModelConverter;
 	
 	@Autowired
-	public SpedizioniServiceImpl(SpedizioniRepository spedizioniRepository, SpedizioniStoricoRepository spedizioniStoricoRepository, StatoSpedizioneRepository statoSpedizioneRepository, SpedizioniModelToOrdiniEntityConverter spedizioniModelToOrdiniEntityConverter, SpedizioniEntityToOrdiniModelConverter spedizioniEntityToOrdiniModelConverter, StoricoSpedizioniEntityToModelConverter storicoSpedizioniEntityToModelConverter) {
+	public SpedizioniServiceImpl(SpedizioniRepository spedizioniRepository, SpedizioniStoricoRepository spedizioniStoricoRepository, StatoSpedizioneRepository statoSpedizioneRepository, SpedizioniModelToSpedizioniEntityConverter spedizioniModelToOrdiniEntityConverter, SpedizioniEntityToSpedizioniModelConverter spedizioniEntityToOrdiniModelConverter, StoricoSpedizioniEntityToModelConverter storicoSpedizioniEntityToModelConverter) {
 		this.spedizioniRepository = spedizioniRepository;
 		this.spedizioniStoricoRepository = spedizioniStoricoRepository;
 		this.statoSpedizioneRepository = statoSpedizioneRepository;
-		this.spedizioniModelToOrdiniEntityConverter = spedizioniModelToOrdiniEntityConverter;
-		this.spedizioniEntityToOrdiniModelConverter = spedizioniEntityToOrdiniModelConverter;
+		this.spedizioniModelToSpedizioniEntityConverter = spedizioniModelToOrdiniEntityConverter;
+		this.spedizioniEntityToSpedizioniModelConverter = spedizioniEntityToOrdiniModelConverter;
 		this.storicoSpedizioniEntityToModelConverter = storicoSpedizioniEntityToModelConverter;
 	}
 
@@ -50,7 +50,7 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 	@Transactional(rollbackFor = Exception.class)
 	public SpedizioneModel creaSpedizione(SpedizioneModel ordine) {
 		
-		TisSpedizioni spedizioniEntity = spedizioniModelToOrdiniEntityConverter.convert(ordine);
+		TisSpedizioni spedizioniEntity = spedizioniModelToSpedizioniEntityConverter.convert(ordine);
 		
 		spedizioniEntity.setDataCreazione(LocalDateTime.now());
 		
@@ -60,7 +60,7 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 		
 		scriviStoricoSpedizione(spedizioniEntity, "CREAZIONE");
 		
-		return spedizioniEntityToOrdiniModelConverter.convert(spedizioniEntity);
+		return spedizioniEntityToSpedizioniModelConverter.convert(spedizioniEntity);
 		
 	}
 
@@ -73,7 +73,7 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 		Optional<TisSpedizioni> ordineEntity = spedizioniRepository.findById(id);
 		
 		if(ordineEntity.isPresent()) {
-			result = spedizioniEntityToOrdiniModelConverter.convert(ordineEntity.get());
+			result = spedizioniEntityToSpedizioniModelConverter.convert(ordineEntity.get());
 		}
 		
 		return result;
@@ -105,7 +105,7 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 				
 		spedizioneEntity.setDataAggiornamento(LocalDateTime.now());
 		
-		return spedizioniEntityToOrdiniModelConverter.convert(spedizioniRepository.save(spedizioneEntity));
+		return spedizioniEntityToSpedizioniModelConverter.convert(spedizioniRepository.save(spedizioneEntity));
 		
 	}
 
@@ -118,7 +118,7 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 		List<TisSpedizioni> spedizioniList = spedizioniRepository.findAll();
 		
 		if(!spedizioniList.isEmpty()) {
-			spedizioniList.stream().forEach(o -> result.add(spedizioniEntityToOrdiniModelConverter.convert(o)));
+			spedizioniList.stream().forEach(o -> result.add(spedizioniEntityToSpedizioniModelConverter.convert(o)));
 		}
 		
 		return result;
