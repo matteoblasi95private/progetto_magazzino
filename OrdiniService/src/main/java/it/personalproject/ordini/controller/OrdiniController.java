@@ -1,6 +1,7 @@
 package it.personalproject.ordini.controller;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import it.personalproject.ordini.domain.CreaOrdineResponse;
 import it.personalproject.ordini.domain.OrdineModel;
 import it.personalproject.ordini.domain.OrdiniService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/ordini")
@@ -31,11 +33,11 @@ public class OrdiniController {
 	}
 	
 	@PostMapping("/crea")
-	public ResponseEntity<CreaOrdineResponse> creaOrdine(@RequestBody OrdineModel ordine) {
+	public ResponseEntity<CreaOrdineResponse> creaOrdine(@Valid @RequestBody OrdineModel ordine) {
 		
         CreaOrdineResponse nuovo = ordiniService.creaOrdine(ordine);
 		
-		URI location = URI.create("/ordini/" + nuovo.getOrdine().getId());
+		URI location = URI.create("/ordini/" + nuovo.ordine().getId());
         return ResponseEntity.created(location).body(nuovo);
 		
 	}
@@ -59,7 +61,7 @@ public class OrdiniController {
 	}
 	
 	@PutMapping("/modifica")
-	public ResponseEntity<OrdineModel> aggiornaOrdine(@RequestBody OrdineModel ordine) {
+	public ResponseEntity<OrdineModel> aggiornaOrdine(@Valid @RequestBody OrdineModel ordine) {
 		OrdineModel aggiornato = ordiniService.aggiornaOrdine(ordine);
 		
 		return ResponseEntity
@@ -69,9 +71,9 @@ public class OrdiniController {
 	
 	
 	@GetMapping("/all")
-	public ResponseEntity<List<OrdineModel>> getAllOrdini() {
+	public ResponseEntity<Collection<OrdineModel>> getAllOrdini() {
 		
-		List<OrdineModel> ordini = ordiniService.getAllOrdini();
+		Collection<OrdineModel> ordini = ordiniService.getAllOrdini();
 		
 		return ResponseEntity
 	            .status(HttpStatus.OK)

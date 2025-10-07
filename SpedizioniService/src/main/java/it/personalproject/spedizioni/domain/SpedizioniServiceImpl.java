@@ -2,9 +2,11 @@ package it.personalproject.spedizioni.domain;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,17 +113,15 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<SpedizioneModel> getAllSpedizioni() {
+	public Collection<SpedizioneModel> getAllSpedizioni() {
+				
+		Collection<TisSpedizioni> spedizioniList = spedizioniRepository.findAll();
 		
-		List<SpedizioneModel> result = new LinkedList<>();
-		
-		List<TisSpedizioni> spedizioniList = spedizioniRepository.findAll();
-		
-		if(!spedizioniList.isEmpty()) {
-			spedizioniList.stream().forEach(o -> result.add(spedizioniEntityToOrdiniModelConverter.convert(o)));
+		if(spedizioniList == null || spedizioniList.isEmpty()) {
+			return Collections.emptyList();
 		}
 		
-		return result;
+		return spedizioniList.stream().map(spedizioniEntityToOrdiniModelConverter::convert).collect(Collectors.toList());
 		
 	}
 
@@ -151,16 +151,14 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 
 	@Override
 	public Collection<StoricoSpedizioniModel> getStoricoSpedizione(Integer id) {
-		
-		Collection<StoricoSpedizioniModel> listStoricoModel = new LinkedList<>();
-		
+				
 		Collection<TisSpedizioniStorico> storicoSpedizioni = spedizioniStoricoRepository.getStoricoSpedizione(id);
 		
-		if(!storicoSpedizioni.isEmpty()) {
-			storicoSpedizioni.stream().forEach(s -> listStoricoModel.add(storicoSpedizioniEntityToModelConverter.convert(s)));
+		if(storicoSpedizioni == null || storicoSpedizioni.isEmpty()) {
+			return Collections.emptyList();
 		}
 		
-		return listStoricoModel;
+		return storicoSpedizioni.stream().map(storicoSpedizioniEntityToModelConverter::convert).collect(Collectors.toList());
 	}
 
 }

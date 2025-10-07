@@ -1,6 +1,7 @@
 package it.personalproject.clienti.controller;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.personalproject.clienti.domain.ClienteModel;
 import it.personalproject.clienti.domain.ClientiService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/clienti")
@@ -30,7 +32,7 @@ public class ClientiController {
 	}
 	
 	@PostMapping("/crea")
-	public ResponseEntity<ClienteModel> creaCliente(@RequestBody ClienteModel cliente) {
+	public ResponseEntity<ClienteModel> creaCliente(@Valid @RequestBody ClienteModel cliente) {
 		
         ClienteModel nuovo = clientiService.creaCliente(cliente);
 		
@@ -58,7 +60,7 @@ public class ClientiController {
 	}
 	
 	@PutMapping("/modifica")
-	public ResponseEntity<ClienteModel> aggiornaCliente(@RequestBody ClienteModel cliente) {
+	public ResponseEntity<ClienteModel> aggiornaCliente(@Valid @RequestBody ClienteModel cliente) {
 		
 		ClienteModel aggiornato = clientiService.aggiornaCliente(cliente);
 		
@@ -69,9 +71,9 @@ public class ClientiController {
 	
 	
 	@GetMapping("/all")
-	public ResponseEntity<List<ClienteModel>> getAllClienti() {
+	public ResponseEntity<Collection<ClienteModel>> getAllClienti() {
 		
-		List<ClienteModel> clienti = clientiService.getAllClienti();
+		Collection<ClienteModel> clienti = clientiService.getAllClienti();
 		
 		return ResponseEntity
 	            .status(HttpStatus.OK)

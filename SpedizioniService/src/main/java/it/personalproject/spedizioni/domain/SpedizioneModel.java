@@ -3,24 +3,56 @@ package it.personalproject.spedizioni.domain;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 public class SpedizioneModel {
 
+	@NotNull
+	@Positive
     private Integer id;
 
+	@NotNull
+	@Positive
     private Integer idOrdine;
+	
+	@NotNull
+	@Positive
     private Integer idCliente;
+	
+	@NotNull
+	@Positive
     private Integer idCorriere;
+	
+	@NotNull
+	@Positive
     private Integer idStato;
 
+	@NotNull
+	@Positive
     private String trackingNumber;
 
+	
+	@NotNull
+	@Positive
     private BigDecimal costoSpedizione;
 
+	@NotNull
     private String destNome;
+	
+	@NotNull
     private String destIndirizzo;
+	
+	@NotNull
     private String destCap;
+	
+	@NotNull
     private String destCitta;
+	
+	@NotNull
     private String destProvincia;
+	
+	@NotNull
     private String destPaese;
 
     private LocalDateTime dataCreazione;

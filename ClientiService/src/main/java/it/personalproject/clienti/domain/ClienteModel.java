@@ -3,17 +3,30 @@ package it.personalproject.clienti.domain;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+
 public class ClienteModel {
 	
+	@NotNull
 	private Integer id;
+	@NotNull
 	private String codiceFiscale;
+	@NotNull
 	private String nome;
+	@NotNull
 	private String cognome;
+	@NotNull
+	@Email
 	private String email;
 	private String telefono;
+	@NotNull
 	private String indirizzo;
+	@NotNull
 	private String citta;
+	@NotNull
 	private String cap;
+	@NotNull
 	private String paese;
 	private LocalDateTime dataRegistrazione;
 	

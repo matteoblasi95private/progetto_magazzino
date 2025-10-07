@@ -3,11 +3,24 @@ package it.personalproject.spedizioni.domain;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 public class StoricoSpedizioniModel {
 	
+	@NotNull
+	@Positive
 	private Integer id;
+	
+	@NotNull
+	@Positive
 	private Integer idSpedizione;
+	
+	@NotNull
+	@Positive
 	private Integer idStato;
+	
+	@NotNull
 	private String descrizione;
 	private LocalDateTime dataEvento;
 	

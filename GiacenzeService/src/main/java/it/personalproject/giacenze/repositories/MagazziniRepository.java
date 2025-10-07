@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import it.personalproject.giacenze.entities.TisMagazzini;
 
-@Repository
+
 public interface MagazziniRepository extends JpaRepository<TisMagazzini, Integer> {
 	
 	

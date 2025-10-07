@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.personalproject.prodotti.domain.ProdottiModel;
 import it.personalproject.prodotti.domain.ProdottiService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/prodotti")
@@ -30,7 +31,7 @@ public class ProdottiController {
 	}
 	
 	@PostMapping("/crea")
-	public ResponseEntity<ProdottiModel> creaProdotto(@RequestBody ProdottiModel prodotto) {
+	public ResponseEntity<ProdottiModel> creaProdotto(@Valid @RequestBody ProdottiModel prodotto) {
 		
         ProdottiModel nuovo = prodottiService.creaProdotto(prodotto);
 		
@@ -58,7 +59,7 @@ public class ProdottiController {
 	}
 	
 	@PutMapping("/modifica")
-	public ResponseEntity<ProdottiModel> aggiornaProdotto(@RequestBody ProdottiModel prodotto) {
+	public ResponseEntity<ProdottiModel> aggiornaProdotto(@Valid @RequestBody ProdottiModel prodotto) {
 		
 		ProdottiModel aggiornato = prodottiService.aggiornaProdotto(prodotto);
 		

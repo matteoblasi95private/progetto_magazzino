@@ -2,8 +2,12 @@ package it.personalproject.giacenze.domain;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,60 +147,58 @@ public class GiacenzeServiceImpl implements GiacenzeService {
 	@Transactional(readOnly = true)
 	public Collection<GiacenzeModel> getListaStockProdotto(Integer idProdotto) {
 		
-		Collection<GiacenzeModel> listaGiacenzeProdotto = new LinkedList<>();
 		
 		Collection<TisGiacenze> listaStocksEntitiesProdotto = giacenzeRepository.getListaStockProdotto(idProdotto);
 		
-		if(!listaStocksEntitiesProdotto.isEmpty()) {
-			listaStocksEntitiesProdotto.stream().forEach(g -> listaGiacenzeProdotto.add(giacenzaEntityToModelConverter.convert(g)));
+		if(listaStocksEntitiesProdotto == null || listaStocksEntitiesProdotto.isEmpty()) {
+			return Collections.emptyList();
 		}
 		
-		return listaGiacenzeProdotto;
-		
+		return listaStocksEntitiesProdotto.stream()
+		.map(giacenzaEntityToModelConverter::convert).collect(Collectors.toList());
+				
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Collection<GiacenzeModel> getListaStockMagazzino(Integer idMagazzino) {
-		
-		Collection<GiacenzeModel> listaGiacenzeMagazzino = new LinkedList<>();
-		
+				
 		Collection<TisGiacenze> listaStocksEntitiesMagazzino = giacenzeRepository.getListaStockMagazzino(idMagazzino);
 		
-		if(!listaStocksEntitiesMagazzino.isEmpty()) {
-			listaStocksEntitiesMagazzino.stream().forEach(g -> listaGiacenzeMagazzino.add(giacenzaEntityToModelConverter.convert(g)));
-		}
+		if (listaStocksEntitiesMagazzino == null || listaStocksEntitiesMagazzino.isEmpty()) {
+	        return Collections.emptyList();
+	    }
 		
-		return listaGiacenzeMagazzino;
-		
+		return listaStocksEntitiesMagazzino.stream()
+				.map(giacenzaEntityToModelConverter::convert).collect(Collectors.toList());
+				
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Collection<MagazzinoModel> getMagazziniConDisponibilitaProdotto(Integer idProdotto, Integer quantita) {
-		
-		Collection<MagazzinoModel> listaMagazziniDisponibilita = new LinkedList<>();
-		
+				
 		Collection<TisMagazzini> listaMagazziniEntitiesDisp = giacenzeRepository.getListaMagazziniDisponibilitaProdotto(idProdotto, quantita);
+		
+		if(listaMagazziniEntitiesDisp == null || listaMagazziniEntitiesDisp.isEmpty()) {
+			return Collections.emptyList();
+		}
 		
 		log.info("GIACENZE SERVICE - RICHIESTA DISPONIBILITA PRODOTTO: {}, quantita: {}, TROVATA DISPONIBILITA MAGAZZINI: {}", idProdotto, quantita, listaMagazziniEntitiesDisp);
 		
-		if(!listaMagazziniEntitiesDisp.isEmpty()) {
-			listaMagazziniEntitiesDisp.stream().forEach(m -> listaMagazziniDisponibilita.add(magazziniEntityToModelConverter.convert(m)));
-		}
-		
-		return listaMagazziniDisponibilita;
+		return listaMagazziniEntitiesDisp.stream()
+				.map(magazziniEntityToModelConverter::convert).collect(Collectors.toList());
 		
 	}
 
 	@Override
 	public GiacenzeModel trasferisciProdotto(TrasferimentoProdottoDTO trasferimentoDTO) {
 		
-		TisGiacenzePK giacenzaAttualePK = new TisGiacenzePK(trasferimentoDTO.getIdMagazzinoPrecedente(), trasferimentoDTO.getIdProdotto());
+		TisGiacenzePK giacenzaAttualePK = new TisGiacenzePK(trasferimentoDTO.idMagazzinoPrecedente(), trasferimentoDTO.idProdotto());
 		
 		TisGiacenze giacenzaAttuale = giacenzeRepository.findById(giacenzaAttualePK).orElseThrow(() -> new EntityNotFoundException("GIACENZA NON TROVATA PER TRASFERIMENTO " + trasferimentoDTO));
 		
-		if(giacenzaAttuale.getQuantitaDisponibile().compareTo(trasferimentoDTO.getQuantitaTrasferita()) < 0) {
+		if(giacenzaAttuale.getQuantitaDisponibile().compareTo(trasferimentoDTO.quantitaTrasferita()) < 0) {
 			throw new IllegalStateException("ERRORE METODO trasferisciProdotto per trasferimento " + trasferimentoDTO + " - QUANTITA DISPONIBILE MINORE DI QUELLA TRAASFERITA");
 		}
 		
@@ -204,15 +206,15 @@ public class GiacenzeServiceImpl implements GiacenzeService {
 		
 		GiacenzeModel giacenzaNuova = new GiacenzeModel();
 		ProdottiModel prodotto = new ProdottiModel();
-		prodotto.setId(trasferimentoDTO.getIdProdotto());
+		prodotto.setId(trasferimentoDTO.idProdotto());
 		MagazzinoModel magazzinoNuovo = new MagazzinoModel();
-		magazzinoNuovo.setId(trasferimentoDTO.getIdMagazzinoNuovo());
+		magazzinoNuovo.setId(trasferimentoDTO.idMagazzinoNuovo());
 		giacenzaNuova.setMagazzino(magazzinoNuovo);
 		giacenzaNuova.setProdotto(prodotto);
-		giacenzaNuova.setQuantitaDisponibile(trasferimentoDTO.getQuantitaTrasferita());
+		giacenzaNuova.setQuantitaDisponibile(trasferimentoDTO.quantitaTrasferita());
 		
 		
-		giacenzaAttuale.setQuantitaDisponibile(giacenzaAttuale.getQuantitaDisponibile()-trasferimentoDTO.getQuantitaTrasferita());
+		giacenzaAttuale.setQuantitaDisponibile(giacenzaAttuale.getQuantitaDisponibile()-trasferimentoDTO.quantitaTrasferita());
 		
 		if(giacenzaAttuale.getQuantitaDisponibile().equals(0)) {
 			cancellaGiacenza(giacenzaNuova);

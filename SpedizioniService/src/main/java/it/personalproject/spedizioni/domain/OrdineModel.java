@@ -4,12 +4,28 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 public class OrdineModel {
 	
+	@NotNull
+	@Positive
 	private Integer id;
+	
+	@NotNull
+	@Positive
 	private Integer idCliente;
+	
+	@NotNull
+	@Positive
 	private Integer idProdotto;
+	
+	@NotNull
+	@Positive
 	private Integer quantitaOrdinata;
+	
+	@NotNull
 	private StatoOrdine statoOrdine;
 	private LocalDateTime dataCreazione;
 	private LocalDateTime dataAggiornamento;

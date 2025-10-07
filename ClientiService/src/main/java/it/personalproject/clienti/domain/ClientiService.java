@@ -1,6 +1,6 @@
 package it.personalproject.clienti.domain;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface ClientiService {
 	
@@ -12,6 +12,6 @@ public interface ClientiService {
 	
 	public ClienteModel aggiornaCliente(ClienteModel ordine);
 	
-	public List<ClienteModel> getAllClienti();
+	public Collection<ClienteModel> getAllClienti();
 
 }

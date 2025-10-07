@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import it.personalproject.spedizioni.domain.SpedizioneModel;
 import it.personalproject.spedizioni.domain.SpedizioniService;
 import it.personalproject.spedizioni.domain.StoricoSpedizioniModel;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/spedizioni")
@@ -32,7 +33,7 @@ public class SpedizioniController {
 	}
 	
 	@PostMapping("/crea")
-	public ResponseEntity<SpedizioneModel> creaSpedizione(@RequestBody SpedizioneModel spedizione) {
+	public ResponseEntity<SpedizioneModel> creaSpedizione(@Valid @RequestBody SpedizioneModel spedizione) {
 		
         SpedizioneModel nuovo = spedizioniService.creaSpedizione(spedizione);
 		
@@ -60,8 +61,8 @@ public class SpedizioniController {
 	}
 	
 	@PutMapping("/modifica")
-	public ResponseEntity<SpedizioneModel> aggiornaSpedizione(@RequestBody SpedizioneModel ordine) {
-		SpedizioneModel aggiornato = spedizioniService.aggiornaSpedizione(ordine);
+	public ResponseEntity<SpedizioneModel> aggiornaSpedizione(@Valid @RequestBody SpedizioneModel spedizione) {
+		SpedizioneModel aggiornato = spedizioniService.aggiornaSpedizione(spedizione);
 		
 		return ResponseEntity
 	            .status(HttpStatus.OK)
@@ -70,9 +71,9 @@ public class SpedizioniController {
 	
 	
 	@GetMapping("/all")
-	public ResponseEntity<List<SpedizioneModel>> getAllSpedizioni() {
+	public ResponseEntity<Collection<SpedizioneModel>> getAllSpedizioni() {
 		
-		List<SpedizioneModel> spedizioni = spedizioniService.getAllSpedizioni();
+		Collection<SpedizioneModel> spedizioni = spedizioniService.getAllSpedizioni();
 		
 		return ResponseEntity
 	            .status(HttpStatus.OK)

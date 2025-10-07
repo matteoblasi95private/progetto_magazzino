@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.personalproject.magazzini.domain.MagazzinoModel;
 import it.personalproject.magazzini.domain.MagazzinoService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/magazzini")
@@ -31,7 +32,7 @@ public class MagazziniController {
 	}
 	
 	@PostMapping("/crea")
-	public ResponseEntity<MagazzinoModel> creaMagazzino(@RequestBody MagazzinoModel spedizione) {
+	public ResponseEntity<MagazzinoModel> creaMagazzino(@Valid @RequestBody MagazzinoModel spedizione) {
 		
         MagazzinoModel nuovo = magazzinoService.creaMagazzino(spedizione);
 		
@@ -59,7 +60,7 @@ public class MagazziniController {
 	}
 	
 	@PutMapping("/modifica")
-	public ResponseEntity<MagazzinoModel> aggiornaMagazzino(@RequestBody MagazzinoModel ordine) {
+	public ResponseEntity<MagazzinoModel> aggiornaMagazzino(@Valid @RequestBody MagazzinoModel ordine) {
 		
 		MagazzinoModel aggiornato = magazzinoService.aggiornaMagazzino(ordine);
 		

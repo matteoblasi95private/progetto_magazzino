@@ -11,7 +11,6 @@ import it.personalproject.giacenze.entities.TisGiacenze;
 import it.personalproject.giacenze.entities.TisGiacenzePK;
 import it.personalproject.giacenze.entities.TisMagazzini;
 
-@Repository
 public interface GiacenzeRepository extends JpaRepository<TisGiacenze, TisGiacenzePK> {
 	
 	

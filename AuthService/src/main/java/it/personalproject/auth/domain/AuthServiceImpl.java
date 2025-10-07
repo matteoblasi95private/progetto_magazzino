@@ -50,14 +50,13 @@ public class AuthServiceImpl implements AuthService {
 		
 		//logger.info("LOGIN UTENTE " + loginDTO);
 		
-		UsernamePasswordAuthenticationToken usernamePassword = UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.getUsername(), loginDTO.getPassword());
+		UsernamePasswordAuthenticationToken usernamePassword = UsernamePasswordAuthenticationToken.unauthenticated(loginDTO.username(), loginDTO.password());
 		Authentication auth = authenticationManager.authenticate(usernamePassword);
 		UserDetails userDetails = (UserDetails) auth.getPrincipal();
 		
 		String jwtToken = generateToken(userDetails.getUsername(), userDetails.getAuthorities());
 		
-		LoginResponse loginResponse = new LoginResponse();
-		loginResponse.setAccessToken(jwtToken);
+		LoginResponse loginResponse = new LoginResponse(jwtToken, null);
 		
 		return loginResponse;
 		
@@ -91,9 +90,7 @@ public class AuthServiceImpl implements AuthService {
 		
 		userRepository.save(newUser);
 		
-		LoginDTO loginDTO = new LoginDTO();
-		loginDTO.setUsername(registerDTO.getUsername());
-		loginDTO.setPassword(registerDTO.getPassword());
+		LoginDTO loginDTO = new LoginDTO(registerDTO.getUsername(), registerDTO.getPassword());
 		
 		return login(loginDTO);
 		

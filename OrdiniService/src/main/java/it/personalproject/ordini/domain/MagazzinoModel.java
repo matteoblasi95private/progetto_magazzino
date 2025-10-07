@@ -3,13 +3,21 @@ package it.personalproject.ordini.domain;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import jakarta.validation.constraints.NotNull;
+
 public class MagazzinoModel {
 
+	@NotNull
     private Integer id;
+	@NotNull
     private String codice;
+	@NotNull
     private String nome;
+	@NotNull
     private String indirizzo;
+	@NotNull
     private String citta;
+	@NotNull
     private String paese;
     private Boolean attivo;
     private LocalDateTime dataCreazione;

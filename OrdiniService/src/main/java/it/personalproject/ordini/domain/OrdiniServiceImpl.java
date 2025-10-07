@@ -2,9 +2,11 @@ package it.personalproject.ordini.domain;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,9 +57,7 @@ public class OrdiniServiceImpl implements OrdiniService {
 	@Transactional(rollbackFor = Exception.class)
 	public CreaOrdineResponse creaOrdine(OrdineModel ordine) {
 		
-		validateOrdine(ordine);
-		
-		CreaOrdineResponse creaOrdineResponse = new CreaOrdineResponse();
+		CreaOrdineResponse creaOrdineResponse;
 		
 		Collection<MagazzinoModel> magazziniDispOrdine = giacenzePort.getMagazziniConDisponibilitaProdotto(ordine.getIdProdotto(), ordine.getQuantitaOrdinata());
 		
@@ -72,15 +72,14 @@ public class OrdiniServiceImpl implements OrdiniService {
 			ordineEntity = ordiniRepository.save(ordineEntity);
 			
 			ordine = ordiniEntityToOrdiniModelConverter.convert(ordineEntity);
-			creaOrdineResponse.setOrdine(ordine);
-			creaOrdineResponse.setOrdineCreato(true);
+			
+			creaOrdineResponse = new CreaOrdineResponse(ordine, true);
 			
 			pubblicaEventoCreazioneOrdine(ordine, magazziniDispOrdine.stream().findFirst().orElseThrow(() -> new EntityNotFoundException("ERRORE CREAZIONE ORDINE - MAGAZZINO NON TROVATO")));
 		
 		}
 		else {
-			creaOrdineResponse.setOrdine(ordine);
-			creaOrdineResponse.setOrdineCreato(false);
+			creaOrdineResponse = new CreaOrdineResponse(ordine, false);
 		}
 		
 		return creaOrdineResponse;
@@ -157,18 +156,17 @@ public class OrdiniServiceImpl implements OrdiniService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<OrdineModel> getAllOrdini() {
-		
-		List<OrdineModel> result = new LinkedList<>();
+	public Collection<OrdineModel> getAllOrdini() {
 		
 		List<TisOrdini> ordiniList = ordiniRepository.findAll();
 		
-		if(!ordiniList.isEmpty()) {
-			ordiniList.stream().forEach(o -> result.add(ordiniEntityToOrdiniModelConverter.convert(o)));
+		if(ordiniList == null || ordiniList.isEmpty()) {
+			return Collections.emptyList();
 		}
 		
-		return result;
-		
+		return ordiniList.stream()
+				.map(ordiniEntityToOrdiniModelConverter::convert).collect(Collectors.toList());
+				
 	}
 	
 	private void validateOrdine(OrdineModel ordine) {

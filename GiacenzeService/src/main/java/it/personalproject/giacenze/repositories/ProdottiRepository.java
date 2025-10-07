@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import it.personalproject.giacenze.entities.TisProdotti;
 
-@Repository
+
 public interface ProdottiRepository extends JpaRepository<TisProdotti, Integer> {
 
 }

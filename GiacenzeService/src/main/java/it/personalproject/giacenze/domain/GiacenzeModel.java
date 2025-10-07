@@ -3,10 +3,19 @@ package it.personalproject.giacenze.domain;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
+
 public class GiacenzeModel {
 	
+	@NotNull
 	private ProdottiModel prodotto;
+	@NotNull
 	private MagazzinoModel magazzino;
+	@NotNull
+	@Positive
 	private Integer quantitaDisponibile;
 	private LocalDateTime dataAggiornamento;
 	

@@ -15,7 +15,7 @@ public interface SpedizioniService {
 	
 	public SpedizioneModel aggiornaSpedizione(SpedizioneModel spedizione);
 	
-	public List<SpedizioneModel> getAllSpedizioni();
+	public Collection<SpedizioneModel> getAllSpedizioni();
 	
 	public void scriviStoricoSpedizione(TisSpedizioni spedizione, String note);
 

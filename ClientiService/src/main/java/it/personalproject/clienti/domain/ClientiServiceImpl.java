@@ -1,9 +1,12 @@
 package it.personalproject.clienti.domain;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -105,17 +108,16 @@ public class ClientiServiceImpl implements ClientiService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<ClienteModel> getAllClienti() {
+	public Collection<ClienteModel> getAllClienti() {
+				
+		var clientiList = clientiRepository.findAll();
 		
-		List<ClienteModel> result = new LinkedList<>();
-		
-		List<TisClienti> clientiList = clientiRepository.findAll();
-		
-		if(!clientiList.isEmpty()) {
-			clientiList.stream().forEach(o -> result.add(clientiEntityToClientiModelConverter.convert(o)));
+		if(clientiList == null || clientiList.isEmpty()) {
+			return Collections.emptyList();
 		}
 		
-		return result;
+		return clientiList.stream().map(clientiEntityToClientiModelConverter::convert).collect(Collectors.toList());
+
 		
 	}
 

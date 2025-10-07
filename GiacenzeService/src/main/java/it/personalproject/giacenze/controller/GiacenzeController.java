@@ -24,6 +24,7 @@ import it.personalproject.giacenze.domain.MagazzinoModel;
 import it.personalproject.giacenze.domain.StoricoMagazzinoModel;
 import it.personalproject.giacenze.domain.TrasferimentoProdottoDTO;
 import it.personalproject.storico.StoricoService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/giacenze")
@@ -42,7 +43,7 @@ public class GiacenzeController {
 	}
 	
 	@PostMapping("/crea")
-	public ResponseEntity<GiacenzeModel> creaStock(@RequestBody GiacenzeModel giacenza) {
+	public ResponseEntity<GiacenzeModel> creaStock(@Valid @RequestBody GiacenzeModel giacenza) {
 		
 		GiacenzeModel nuovo = giacenzeService.creaStock(giacenza);
 		
@@ -61,7 +62,7 @@ public class GiacenzeController {
 	}
 	
 	@PutMapping("/modifica")
-	public ResponseEntity<GiacenzeModel> aggiornaQuantita(@RequestBody GiacenzeModel giacenza) {
+	public ResponseEntity<GiacenzeModel> aggiornaQuantita(@Valid @RequestBody GiacenzeModel giacenza) {
 		
 		GiacenzeModel stockAggiornato = giacenzeService.aggiornaQuantita(giacenza);
 		
@@ -117,7 +118,7 @@ public class GiacenzeController {
 	
 	
 	@PostMapping("/cancella")
-	public ResponseEntity<GiacenzeModel> cancellaGiacenza(@RequestBody GiacenzeModel giacenza) {
+	public ResponseEntity<GiacenzeModel> cancellaGiacenza(@Valid @RequestBody GiacenzeModel giacenza) {
 		
 		
 		giacenzeService.cancellaGiacenza(giacenza);

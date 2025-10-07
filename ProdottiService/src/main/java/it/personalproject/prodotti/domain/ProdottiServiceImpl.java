@@ -1,9 +1,11 @@
 package it.personalproject.prodotti.domain;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,16 +109,16 @@ public class ProdottiServiceImpl implements ProdottiService {
 	@Transactional(readOnly = true)
 	public List<ProdottiModel> getAllProdotti() {
 		
-		List<ProdottiModel> result = new LinkedList<>();
+		var result = new LinkedList<>();
 		
-		List<TisProdotti> prodottiList = prodottiRepository.findAll();
+		var prodottiList = prodottiRepository.findAll();
 		
-		if(!prodottiList.isEmpty()) {
-			prodottiList.stream().forEach(o -> result.add(prodottiEntityToClientiModelConverter.convert(o)));
+		if(prodottiList == null || prodottiList.isEmpty()) {
+			return Collections.emptyList();
 		}
 		
-		return result;
-		
+		return prodottiList.stream().map(prodottiEntityToClientiModelConverter::convert).collect(Collectors.toList());
+
 	}
 
 }

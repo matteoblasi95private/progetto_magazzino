@@ -4,14 +4,27 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 public class ProdottiModel {
 	
+	@NotNull
 	private Integer id;
+	@NotNull
 	private String codiceProdotto;
+	@NotNull
 	private String nome;
+	@NotNull
 	private String descrizione;
+	@NotNull
+	@Positive
 	private BigDecimal prezzo;
+	@NotNull
+	@Positive
 	private Integer quantitaDisponibile;
+	@NotNull
 	private String categoria;
 	private LocalDateTime dataCreazione;
 	private LocalDateTime dataAggiornamento;

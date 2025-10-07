@@ -1,15 +1,24 @@
 package it.personalproject.ordini.domain;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public class OrdineModel {
 	
+	@NotNull
+	@Positive
 	private Integer id;
+	@NotNull
 	private Integer idCliente;
+	@NotNull
 	private Integer idProdotto;
+	@Positive
 	private Integer quantitaOrdinata;
+	@NotNull
 	private StatoOrdine statoOrdine;
 	private LocalDateTime dataCreazione;
 	private LocalDateTime dataAggiornamento;
