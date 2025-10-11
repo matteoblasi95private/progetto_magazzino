@@ -1,105 +1,62 @@
 package it.personalproject.apigateway.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-import reactor.core.publisher.Mono;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Base64;
+import org.springframework.security.web.SecurityFilterChain;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Configuration
-//@Profile("prod")
+@EnableWebSecurity
 public class SecurityConfig {
-	
-	@Autowired
-    private Environment env;
 
-  // decodifica token jwt
-  
-	@Bean
-	public ReactiveJwtDecoder jwtDecoder(
-	    @Value("${spring.security.oauth2.resourceserver.jwt.secret}") String secret) {
-
-	  SecretKey key;
-	  try {
-	    key = new SecretKeySpec(Base64.getDecoder().decode(secret), "HmacSHA256");
-	  } catch (IllegalArgumentException e) {
-	    key = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-	  }
-
-	  return NimbusReactiveJwtDecoder
-	      .withSecretKey(key)
-	      .macAlgorithm(MacAlgorithm.HS256)
-	      .build();
-	}
-
-  // Converte il claim roles in authorities
-  private Converter<Jwt, Mono<AbstractAuthenticationToken>> jwtAuthConverter() {
+  private Converter<Jwt, AbstractAuthenticationToken> magazzinoJwtAuthConverter() {
     return jwt -> {
       Object raw = jwt.getClaims().get("roles");
       List<String> roles = (raw instanceof List<?> l)
           ? l.stream().map(String::valueOf).collect(Collectors.toList())
           : List.of();
       Collection<GrantedAuthority> auths = roles.stream()
-          .map(SimpleGrantedAuthority::new)
+          .map(r -> new SimpleGrantedAuthority("ROLE_" + r))
           .collect(Collectors.toList());
-      return Mono.just(new JwtAuthenticationToken(jwt, auths));
+      return new JwtAuthenticationToken(jwt, auths);
     };
   }
   
-  @Bean
-  @Profile("dev")
-  public SecurityWebFilterChain devSecurityFilterChain(ServerHttpSecurity http) {
-      return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
-                 .authorizeExchange(reg -> reg.anyExchange().permitAll())
-                 .build();
-  }
+//  @Bean
+//  @Profile("dev")
+//  public SecurityFilterChain devSecurityFilterChain(HttpSecurity http) throws Exception {
+//      
+//      return http
+//    		  .csrf(csrf -> csrf.disable())
+//    	      .authorizeHttpRequests(reg -> reg
+//    	        .anyRequest().permitAll()
+//    	      )
+//    	      .build();
+//  }
 
   @Bean
-  @Profile("!dev")
-  public SecurityWebFilterChain prodSecurityFilterChain(ServerHttpSecurity http) {
-	  
-//	String activeProfile = Arrays.stream(env.getActiveProfiles())
-//              .findFirst()
-//              .orElse("default");
-//		
-//	if ("dev".equals(activeProfile)) {
-//	      return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
-//          .authorizeExchange(reg -> reg.anyExchange().permitAll())
-//          .build();
-//	}
+  //@Profile("!dev")
+  public SecurityFilterChain prodSecurityFilterChain(HttpSecurity http) throws Exception {
 	  
     return http
-      .csrf(ServerHttpSecurity.CsrfSpec::disable)
-      .authorizeExchange(reg -> reg
-        .pathMatchers("/api/auth/**", "/auth/**", "/actuator/**", "/fallback/**").permitAll()
-        .pathMatchers("/api/admin/**").hasRole("ADMIN")
-        .anyExchange().authenticated()
+      .csrf(csrf -> csrf.disable())
+      .authorizeHttpRequests(reg -> reg
+        .anyRequest().authenticated()
       )
       .oauth2ResourceServer(oauth -> oauth
-        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter()))
+        .jwt(jwt -> jwt.jwtAuthenticationConverter(magazzinoJwtAuthConverter()))
       )
       .build();
   }
+  
 }
