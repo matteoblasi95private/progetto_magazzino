@@ -50,9 +50,9 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public SpedizioneModel creaSpedizione(SpedizioneModel ordine) {
+	public SpedizioneModel creaSpedizione(SpedizioneModel spedizione) {
 		
-		TisSpedizioni spedizioniEntity = spedizioniModelToOrdiniEntityConverter.convert(ordine);
+		TisSpedizioni spedizioniEntity = spedizioniModelToOrdiniEntityConverter.convert(spedizione);
 		
 		spedizioniEntity.setDataCreazione(LocalDateTime.now());
 		

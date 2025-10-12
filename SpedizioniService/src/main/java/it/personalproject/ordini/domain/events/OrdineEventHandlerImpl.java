@@ -19,29 +19,32 @@ public class OrdineEventHandlerImpl implements OrdineEventHandler {
 	@Override
 	public void handleEvent(OrdineEvent e) {
 		
-		if(e instanceof OrdineCreatedEvent) {
-			
-			SpedizioneModel spedizione = new SpedizioneModel();
-			
-			spedizione.setIdOrdine(e.getOrdine().getId());
-			spedizione.setIdCliente(e.getOrdine().getIdCliente());
-			spedizione.setTrackingNumber("1");
-			spedizione.setDataConsegnaPrevista(LocalDateTime.now().plusDays(1));
-			spedizione.setDestCitta("Roma");
-			spedizione.setDestProvincia("RM");
-			spedizione.setDataCreazione(LocalDateTime.now());
-			spedizione.setDestIndirizzo("Via Test 1");
-			spedizione.setDestNome("test");
-			spedizione.setDestCap("00118");
-			spedizione.setIdStato(1);
-			spedizione.setCostoSpedizione(BigDecimal.valueOf(30));
-			
-			spedizioniService.creaSpedizione(spedizione);
-		}
-		else {
-			throw new IllegalArgumentException("ORDINE EVENT HANDLER - EVENTO NON CONTEMPLATO: " + e);
+		switch(e) {
+			case OrdineCreatedEvent o -> spedizioniService.creaSpedizione(creaSpedizioneFromOrdine(o));
 		}
 		
 	}
-
+	
+	private SpedizioneModel creaSpedizioneFromOrdine(OrdineEvent e) {
+		
+		SpedizioneModel spedizione = new SpedizioneModel();
+		
+		spedizione.setIdOrdine(e.getOrdine().getId());
+		spedizione.setIdCliente(e.getOrdine().getIdCliente());
+		spedizione.setTrackingNumber("1");
+		spedizione.setDataConsegnaPrevista(LocalDateTime.now().plusDays(1));
+		spedizione.setDestCitta("Roma");
+		spedizione.setDestProvincia("RM");
+		spedizione.setDataCreazione(LocalDateTime.now());
+		spedizione.setDestIndirizzo("Via Test 1");
+		spedizione.setDestNome("test");
+		spedizione.setDestCap("00118");
+		spedizione.setIdStato(1);
+		spedizione.setCostoSpedizione(BigDecimal.valueOf(30));
+		
+		return spedizione;
+		
+		
+	}
+	
 }

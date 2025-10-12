@@ -134,4 +134,4 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak:9093/realms/magazzino
+          issuer-uri: http://keycloak:8080/realms/magazzino

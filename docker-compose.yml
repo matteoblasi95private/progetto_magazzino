@@ -234,9 +234,9 @@ services:
 
 
   keycloak:
-    image: quay.io/keycloak/keycloak:24.0.3
+    image: quay.io/keycloak/keycloak:26.4.0
     container_name: keycloak
-    command: start-dev --import-realm
+    command: start-dev
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
@@ -244,9 +244,10 @@ services:
     ports:
       - "9093:8080"
     volumes:
-      - ./keycloak/realms:/opt/keycloak/data/import
+      - keycloak_data:/opt/keycloak/data
       
 volumes:
   sqlserver_data:
+  keycloak_data:
   kafka_data:
     driver: local
