@@ -40,3 +40,21 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://magazzino-eureka:8761/eureka
+      
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "!dev"
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/magazzino

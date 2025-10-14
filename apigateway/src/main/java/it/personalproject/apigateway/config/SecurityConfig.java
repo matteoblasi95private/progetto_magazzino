@@ -8,26 +8,22 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
-
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Configuration
 public class SecurityConfig {
 
-  // Converte il claim roles in authorities
   private Converter<Jwt, Mono<AbstractAuthenticationToken>> jwtAuthConverter() {
     return jwt -> {
-      Object raw = jwt.getClaims().get("roles");
-      List<String> roles = (raw instanceof List<?> l)
+      var raw = jwt.getClaims().get("roles");
+      var roles = (raw instanceof List<?> l)
           ? l.stream().map(String::valueOf).collect(Collectors.toList())
           : List.of();
-      Collection<GrantedAuthority> auths = roles.stream()
+      var auths = roles.stream()
           .map(r -> new SimpleGrantedAuthority("ROLE_" + r))
           .collect(Collectors.toList());
       return Mono.just(new JwtAuthenticationToken(jwt, auths));

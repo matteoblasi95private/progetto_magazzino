@@ -10,7 +10,7 @@ import it.personalproject.ordini.domain.OrdineModel;
 @JsonSubTypes({
     @Type(value = OrdineCreatedEvent.class, name = "OrdineCreatedEvent")
 })
-public abstract class OrdineEvent {
+public sealed abstract class OrdineEvent permits OrdineCreatedEvent {
 	
 	protected OrdineModel ordine;
 	

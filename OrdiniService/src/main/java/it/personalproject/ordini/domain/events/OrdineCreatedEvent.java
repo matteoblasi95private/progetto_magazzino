@@ -3,7 +3,7 @@ package it.personalproject.ordini.domain.events;
 import it.personalproject.ordini.domain.MagazzinoModel;
 import it.personalproject.ordini.domain.OrdineModel;
 
-public class OrdineCreatedEvent extends OrdineEvent {
+public final class OrdineCreatedEvent extends OrdineEvent {
 	
 	private MagazzinoModel magazzinoOrdine;
 	
