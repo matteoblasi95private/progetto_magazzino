@@ -4,10 +4,15 @@ import java.util.Collection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 
 import it.personalproject.ordini.domain.MagazzinoModel;
 import it.personalproject.ordini.domain.ports.GiacenzeOutboundPort;
@@ -17,13 +22,11 @@ public class GiacenzeSyncOutboundAdapter implements GiacenzeOutboundPort {
 	
     private static final Logger logger = LoggerFactory.getLogger(GiacenzeSyncOutboundAdapter.class);
 	
-	private final String giacenzeUrl;
+	private final RestClient restClient;
 	
-	private final WebClient webClient;
-	
-	public GiacenzeSyncOutboundAdapter(@Value("${giacenze.rest.url}") String giacenzeUrl, WebClient.Builder webClientBuilder) {
-		this.giacenzeUrl = giacenzeUrl;
-		this.webClient = webClientBuilder.baseUrl(this.giacenzeUrl).build();
+	@Autowired
+	public GiacenzeSyncOutboundAdapter(@Qualifier("gatewayRestClient") RestClient restClient) {
+		this.restClient = restClient;
 	}
 
 	@Override
@@ -31,19 +34,17 @@ public class GiacenzeSyncOutboundAdapter implements GiacenzeOutboundPort {
 		
 		try {
 			
-			Collection<MagazzinoModel> response = webClient
-					.get()
-					.uri(uriBuilder -> uriBuilder
-							.path("/giacenze/disponibilita")
+			return restClient.get()
+					.uri(u -> u
+							.path("/api/giacenze/disponibilita")
 							.queryParam("idprodotto", idProdotto)
 							.queryParam("quantita", quantita)
 							.build())
 					.retrieve()
-					.bodyToMono(new ParameterizedTypeReference<Collection<MagazzinoModel>>() {
-					})
-					.block();
-					return response;
-			
+					.onStatus(HttpStatusCode::isError, (req, res) -> {
+                        throw new RestClientException("Errore chiamata giacenze service da ordini service: HTTP " + res.getStatusCode());
+                    })
+					.body(new ParameterizedTypeReference<Collection<MagazzinoModel>>() {});
 		}
 		
 		catch(Exception e) {
