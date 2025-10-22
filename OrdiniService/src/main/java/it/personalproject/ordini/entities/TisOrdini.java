@@ -28,6 +28,10 @@ public class TisOrdini {
 	@JoinColumn(name = "IdProdotto")
 	private TisProdotti idProdotto;
 	
+	@ManyToOne
+	@JoinColumn(name = "IdStatoOrdine")
+	private TfStatoOrdine idStatoOrdine;
+	
 	@Column(name = "QuantitaOrdinata", nullable = false)
 	private Integer quantitaOrdinata;
 	
@@ -83,6 +87,14 @@ public class TisOrdini {
 
 	public void setQuantitaOrdinata(Integer quantitaOrdinata) {
 		this.quantitaOrdinata = quantitaOrdinata;
+	}
+
+	public TfStatoOrdine getIdStatoOrdine() {
+		return idStatoOrdine;
+	}
+
+	public void setIdStatoOrdine(TfStatoOrdine idStatoOrdine) {
+		this.idStatoOrdine = idStatoOrdine;
 	}
 	
 	

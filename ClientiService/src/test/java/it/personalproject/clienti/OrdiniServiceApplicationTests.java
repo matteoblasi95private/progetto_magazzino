@@ -1,4 +1,4 @@
-package it.progettomio.OrdiniService;
+package it.personalproject.clienti;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,8 +32,9 @@ public class SecurityConfig {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 	
+	@Profile("!dev")
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain prodChain(HttpSecurity http) throws Exception {
 		
 		return http
 				.csrf(csrf -> csrf.disable())
@@ -47,7 +49,21 @@ public class SecurityConfig {
 						
 	}
 	
+	@Profile("dev")
+	@Bean
+	public SecurityFilterChain devChain(HttpSecurity http) throws Exception {
+		
+		return http
+				.csrf(csrf -> csrf.disable())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(req -> req
+					.anyRequest().permitAll()
+				).build();
+						
+	}
 	
+	
+	@Profile("!dev")
 	@Bean
 	public OAuth2AuthorizedClientManager authorizedClientManager(
 	      ClientRegistrationRepository registrations) {
@@ -64,8 +80,9 @@ public class SecurityConfig {
 	    
 	}
 
+	@Profile("!dev")
 	@Bean(name = "gatewayRestClient")
-	public RestClient securedRestClient(OAuth2AuthorizedClientManager manager, @Value("${apigateway.url}") String apigatewayUrl) {
+	public RestClient securedRestClientProd(OAuth2AuthorizedClientManager manager, @Value("${apigateway.url}") String apigatewayUrl) {
 		
 		
 		logger.info("API GATEWAY URL: " + apigatewayUrl);
@@ -84,6 +101,18 @@ public class SecurityConfig {
 	          request.getHeaders().setBearerAuth(authorized.getAccessToken().getTokenValue());
 	          return execution.execute(request, body);
 	        })
+	        .build();
+	  }
+	
+	@Profile("dev")
+	@Bean(name = "gatewayRestClient")
+	public RestClient restClientDev(@Value("${apigateway.url}") String apigatewayUrl) {
+		
+		
+		logger.info("API GATEWAY URL: " + apigatewayUrl);
+		
+	    return RestClient.builder()
+	    	.baseUrl(apigatewayUrl)
 	        .build();
 	  }
 

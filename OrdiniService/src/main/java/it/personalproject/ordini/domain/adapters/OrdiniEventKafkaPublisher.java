@@ -23,7 +23,7 @@ public class OrdiniEventKafkaPublisher implements OrdiniEventPublisherPort {
 
 	@Override
 	public void publish(OrdineEvent ordineEvent) {
-		log.info("ORDINI SERVICE - TOPIC ORDINI - PRODUCER - PUBBLICAZIONE EVENTO: {}" + ordineEvent);
+		log.info("ORDINI SERVICE - TOPIC ORDINI - PRODUCER - PUBBLICAZIONE EVENTO: {}",  ordineEvent);
 		kafkaTemplate.send(ordiniChannel, ordineEvent);	
 	}
 

@@ -21,6 +21,7 @@ public class OrdineEventHandlerImpl implements OrdineEventHandler {
 		
 		switch(e) {
 			case OrdineCreatedEvent o -> spedizioniService.creaSpedizione(creaSpedizioneFromOrdine(o));
+			case OrdineCancellatoEvent o -> spedizioniService.cancellaSpedizione(o.getOrdine().getId());
 		}
 		
 	}

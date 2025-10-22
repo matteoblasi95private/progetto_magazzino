@@ -9,11 +9,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.personalproject.ordini.converters.OrdiniModelToOrdiniEntityConverter;
+import it.personalproject.ordini.domain.events.OrdineCancellatoEvent;
 import it.personalproject.ordini.domain.events.OrdineCreatedEvent;
+import it.personalproject.ordini.domain.events.OrdineEventHandler;
 import it.personalproject.ordini.domain.ports.GiacenzeOutboundPort;
 import it.personalproject.ordini.domain.ports.OrdiniEventPublisherPort;
 import it.personalproject.ordini.converters.OrdiniEntityToOrdiniModelConverter;
@@ -23,12 +26,15 @@ import it.personalproject.ordini.entities.TisProdotti;
 import it.personalproject.ordini.repositories.ClientiRepository;
 import it.personalproject.ordini.repositories.OrdiniRepository;
 import it.personalproject.ordini.repositories.ProdottiRepository;
+import it.personalproject.ordini.repositories.StatoOrdineRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class OrdiniServiceImpl implements OrdiniService {
 	
 	private final OrdiniRepository ordiniRepository;
+	
+	private final StatoOrdineRepository statoOrdineRepository;
 	
 	private final ClientiRepository clientiRepository;
 	
@@ -40,17 +46,18 @@ public class OrdiniServiceImpl implements OrdiniService {
 	
 	private final GiacenzeOutboundPort giacenzePort;
 	
-	private final OrdiniEventPublisherPort ordiniEventPublisher;
+	private final ApplicationEventPublisher events;
 	
 	@Autowired
-	public OrdiniServiceImpl(OrdiniRepository ordiniRepo, ClientiRepository clientiRepository, ProdottiRepository prodottiRepository, OrdiniModelToOrdiniEntityConverter ordiniModelToOrdiniEntityConv, OrdiniEntityToOrdiniModelConverter ordiniEntityToOrdiniModelConv, GiacenzeOutboundPort giacenzePort, OrdiniEventPublisherPort ordiniEventPublisher) {
+	public OrdiniServiceImpl(OrdiniRepository ordiniRepo, StatoOrdineRepository statoOrdineRepository, ClientiRepository clientiRepository, ProdottiRepository prodottiRepository, OrdiniModelToOrdiniEntityConverter ordiniModelToOrdiniEntityConv, OrdiniEntityToOrdiniModelConverter ordiniEntityToOrdiniModelConv, GiacenzeOutboundPort giacenzePort, ApplicationEventPublisher events) {
 		this.ordiniRepository = ordiniRepo;
+		this.statoOrdineRepository = statoOrdineRepository;
 		this.clientiRepository = clientiRepository;
 		this.prodottiRepository = prodottiRepository;
 		this.ordiniModelToOrdiniEntityConverter = ordiniModelToOrdiniEntityConv;
 		this.ordiniEntityToOrdiniModelConverter = ordiniEntityToOrdiniModelConv;
 		this.giacenzePort = giacenzePort;
-		this.ordiniEventPublisher = ordiniEventPublisher;
+		this.events = events;
 	}
 
 	@Override
@@ -69,13 +76,17 @@ public class OrdiniServiceImpl implements OrdiniService {
 			
 			ordineEntity.setDataAggiornamento(LocalDateTime.now());
 			
+			ordineEntity.setIdStatoOrdine(statoOrdineRepository.findById(1).orElseThrow(() -> new EntityNotFoundException("STATO ORDINE CREATO (ID 1) NON TROVATO")));
+			
 			ordineEntity = ordiniRepository.save(ordineEntity);
 			
 			ordine = ordiniEntityToOrdiniModelConverter.convert(ordineEntity);
 			
 			creaOrdineResponse = new CreaOrdineResponse(ordine, true);
 			
-			pubblicaEventoCreazioneOrdine(ordine, magazziniDispOrdine.stream().findFirst().orElseThrow(() -> new EntityNotFoundException("ERRORE CREAZIONE ORDINE - MAGAZZINO NON TROVATO")));
+			OrdineCreatedEvent ordineCreazioneEvent = new OrdineCreatedEvent(ordine, magazziniDispOrdine.stream().findFirst().orElseThrow(() -> new EntityNotFoundException("ERRORE CREAZIONE ORDINE - MAGAZZINO NON TROVATO")));
+			
+			events.publishEvent(ordineCreazioneEvent);
 		
 		}
 		else {
@@ -107,17 +118,15 @@ public class OrdiniServiceImpl implements OrdiniService {
 	public void cancellaOrdine(Integer id) {
 		Optional<TisOrdini> ordineEntity = ordiniRepository.findById(id);
 		if(ordineEntity.isPresent()) {
+			var ordineModel = ordiniEntityToOrdiniModelConverter.convert(ordineEntity.get());
 			ordiniRepository.delete(ordineEntity.get());
+			events.publishEvent(new OrdineCancellatoEvent(ordineModel));
 		}
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public OrdineModel aggiornaOrdine(OrdineModel ordine) {
-		
-		if(ordine.getIdCliente() == null || ordine.getIdProdotto() == null) {
-			throw new IllegalArgumentException("ERRORE AGGIORNA ORDINE " + ordine.getId() + " - ID CLIENTE O ID PRODOTTO NON VALORIZZATI");
-		}
 		
 		Optional<TisOrdini> optionalOrdine = ordiniRepository.findById(ordine.getId());
 		
@@ -167,21 +176,6 @@ public class OrdiniServiceImpl implements OrdiniService {
 		return ordiniList.stream()
 				.map(ordiniEntityToOrdiniModelConverter::convert).collect(Collectors.toList());
 				
-	}
-	
-	private void validateOrdine(OrdineModel ordine) {
-		if(ordine.getIdCliente() == null || ordine.getIdProdotto() == null) {
-			throw new IllegalArgumentException("ERRORE CREAZIONE ORDINE - ID PRODOTTO O ID CLIENTE NON VALORIZZATI");
-		}
-		
-		if(ordine.getQuantitaOrdinata().compareTo(0) <= 0) {
-			throw new IllegalArgumentException("ERRORE CREAZIONE ORDINE - QUANTITA ORDINATA MINORE DI ZERO");
-		}
-	}
-	
-	private void pubblicaEventoCreazioneOrdine(OrdineModel ordine, MagazzinoModel magazzino) {
-		OrdineCreatedEvent ordineCreatoEvent = new OrdineCreatedEvent(ordine, magazzino);
-		ordiniEventPublisher.publish(ordineCreatoEvent);
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,8 +22,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 	
+	@Profile("!dev")
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain prodChain(HttpSecurity http) throws Exception {
 		
 		return http
 				.csrf(csrf -> csrf.disable())
@@ -34,6 +36,19 @@ public class SecurityConfig {
 				.oauth2ResourceServer(oauth -> oauth
 				        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter()))
 				      ).build();
+						
+	}
+	
+	@Profile("dev")
+	@Bean
+	public SecurityFilterChain devChain(HttpSecurity http) throws Exception {
+		
+		return http
+				.csrf(csrf -> csrf.disable())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(req -> req
+					.anyRequest().permitAll()
+				).build();
 						
 	}
 

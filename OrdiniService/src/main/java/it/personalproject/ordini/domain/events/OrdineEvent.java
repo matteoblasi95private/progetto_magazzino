@@ -5,29 +5,23 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import it.personalproject.ordini.domain.OrdineModel;
+import jakarta.validation.constraints.NotNull;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
     @Type(value = OrdineCreatedEvent.class, name = "OrdineCreatedEvent")
 })
-public sealed abstract class OrdineEvent permits OrdineCreatedEvent {
+public sealed abstract class OrdineEvent permits OrdineCreatedEvent, OrdineCancellatoEvent {
 	
-	protected OrdineModel ordine;
+	@NotNull
+	protected final OrdineModel ordine;
 	
-	public OrdineEvent() {
-		
-	}
-
 	public OrdineEvent(OrdineModel ordine) {
 		this.ordine = ordine;
 	}
 
 	public OrdineModel getOrdine() {
 		return ordine;
-	}
-
-	public void setOrdine(OrdineModel ordine) {
-		this.ordine = ordine;
 	}
 
 	@Override
