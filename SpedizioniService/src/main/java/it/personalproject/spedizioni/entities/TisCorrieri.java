@@ -21,30 +21,21 @@ public class TisCorrieri {
     @Column(name = "Nome", nullable = false, length = 100)
     private String nome;
 
-    @Column(name = "Telefono", length = 30)
-    private String telefono;
-
-    @Column(name = "Email", length = 150)
-    private String email;
-
     @Column(name = "Attivo", nullable = false)
     private Boolean attivo = true;
-
-    @Column(name = "DataCreazione", updatable = false)
-    private LocalDateTime dataCreazione;
-
-    @Column(name = "DataAggiornamento")
-    private LocalDateTime dataAggiornamento;
+    
+    @Column(name = "Sito")
+    private String sito;
+    
+    @ManyToOne
+    @JoinColumn(name = "IdStatoCorriere")
+    private TfStatoCorriere idStatoCorriere;
 
     public TisCorrieri() {}
 
-    public TisCorrieri(String nome, String telefono, String email, Boolean attivo) {
+    public TisCorrieri(String nome, Boolean attivo) {
         this.nome = nome;
-        this.telefono = telefono;
-        this.email = email;
         this.attivo = attivo;
-        this.dataCreazione = LocalDateTime.now();
-        this.dataAggiornamento = LocalDateTime.now();
     }
 
     // --- getter/setter ---
@@ -54,22 +45,18 @@ public class TisCorrieri {
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
 
-    public String getTelefono() { return telefono; }
-    public void setTelefono(String telefono) { this.telefono = telefono; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
     public Boolean getAttivo() { return attivo; }
     public void setAttivo(Boolean attivo) { this.attivo = attivo; }
 
-    public LocalDateTime getDataCreazione() { return dataCreazione; }
-    public void setDataCreazione(LocalDateTime dataCreazione) { this.dataCreazione = dataCreazione; }
+    public String getSito() {
+		return sito;
+	}
 
-    public LocalDateTime getDataAggiornamento() { return dataAggiornamento; }
-    public void setDataAggiornamento(LocalDateTime dataAggiornamento) { this.dataAggiornamento = dataAggiornamento; }
+	public void setSito(String sito) {
+		this.sito = sito;
+	}
 
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof TisCorrieri that)) return false;
@@ -84,7 +71,7 @@ public class TisCorrieri {
 
     @Override
     public String toString() {
-        return "TisCorrieri{id=%d, nome='%s', email='%s', attivo=%s}"
-            .formatted(id, nome, email, attivo);
+        return "TisCorrieri{id=%d, nome='%s', attivo=%s}"
+            .formatted(id, nome, attivo);
     }
 }

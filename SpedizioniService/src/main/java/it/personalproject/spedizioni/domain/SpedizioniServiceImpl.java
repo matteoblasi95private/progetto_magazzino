@@ -1,5 +1,6 @@
 package it.personalproject.spedizioni.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,13 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.personalproject.ordini.domain.exceptions.CorrieriAttiviLiberiNotFoundException;
 import it.personalproject.spedizioni.converters.SpedizioniEntityToOrdiniModelConverter;
 import it.personalproject.spedizioni.converters.SpedizioniModelToOrdiniEntityConverter;
 import it.personalproject.spedizioni.converters.StoricoSpedizioniEntityToModelConverter;
+import it.personalproject.spedizioni.entities.TfStatoCorriere;
+import it.personalproject.spedizioni.entities.TisClienti;
+import it.personalproject.spedizioni.entities.TisCorrieri;
 import it.personalproject.spedizioni.entities.TisSpedizioni;
 import it.personalproject.spedizioni.entities.TisSpedizioniStorico;
+import it.personalproject.spedizioni.repositories.ClientiRepository;
+import it.personalproject.spedizioni.repositories.CorrieriRepository;
 import it.personalproject.spedizioni.repositories.SpedizioniRepository;
 import it.personalproject.spedizioni.repositories.SpedizioniStoricoRepository;
+import it.personalproject.spedizioni.repositories.StatoCorriereRepository;
 import it.personalproject.spedizioni.repositories.StatoSpedizioneRepository;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -38,14 +46,23 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 	
 	private final StoricoSpedizioniEntityToModelConverter storicoSpedizioniEntityToModelConverter;
 	
+	private final ClientiRepository clientiRepository;
+	
+	private final CorrieriRepository corrieriRepository;
+	
+	private final StatoCorriereRepository statoCorriereRepository;
+	
 	@Autowired
-	public SpedizioniServiceImpl(SpedizioniRepository spedizioniRepository, SpedizioniStoricoRepository spedizioniStoricoRepository, StatoSpedizioneRepository statoSpedizioneRepository, SpedizioniModelToOrdiniEntityConverter spedizioniModelToOrdiniEntityConverter, SpedizioniEntityToOrdiniModelConverter spedizioniEntityToOrdiniModelConverter, StoricoSpedizioniEntityToModelConverter storicoSpedizioniEntityToModelConverter) {
+	public SpedizioniServiceImpl(SpedizioniRepository spedizioniRepository, SpedizioniStoricoRepository spedizioniStoricoRepository, StatoSpedizioneRepository statoSpedizioneRepository, SpedizioniModelToOrdiniEntityConverter spedizioniModelToOrdiniEntityConverter, SpedizioniEntityToOrdiniModelConverter spedizioniEntityToOrdiniModelConverter, StoricoSpedizioniEntityToModelConverter storicoSpedizioniEntityToModelConverter, ClientiRepository clientiRepository, CorrieriRepository corrieriRepository, StatoCorriereRepository statoCorriereRepository) {
 		this.spedizioniRepository = spedizioniRepository;
 		this.spedizioniStoricoRepository = spedizioniStoricoRepository;
 		this.statoSpedizioneRepository = statoSpedizioneRepository;
 		this.spedizioniModelToOrdiniEntityConverter = spedizioniModelToOrdiniEntityConverter;
 		this.spedizioniEntityToOrdiniModelConverter = spedizioniEntityToOrdiniModelConverter;
 		this.storicoSpedizioniEntityToModelConverter = storicoSpedizioniEntityToModelConverter;
+		this.clientiRepository = clientiRepository;
+		this.corrieriRepository = corrieriRepository;
+		this.statoCorriereRepository = statoCorriereRepository;
 	}
 
 	@Override
@@ -159,6 +176,55 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 		}
 		
 		return storicoSpedizioni.stream().map(storicoSpedizioniEntityToModelConverter::convert).collect(Collectors.toList());
+	}
+
+	@Override
+	public SpedizioneModel creaSpedizioneFromOrdine(OrdineModel o) throws CorrieriAttiviLiberiNotFoundException {
+		
+		TisClienti clienteEntity = clientiRepository.findById(o.getIdCliente()).orElseThrow(() -> new EntityNotFoundException("ERRORE CREAZIONE SPEDIZIONE DA ORDINE " + o.getId() + " - CLIENTE NON TROVATO SUGLI ARCHIVI"));
+		
+		SpedizioneModel spedizione = new SpedizioneModel();
+		
+		spedizione.setIdOrdine(o.getId());
+		spedizione.setIdCliente(o.getIdCliente());
+		spedizione.setTrackingNumber("1");
+		spedizione.setDataConsegnaPrevista(LocalDateTime.now().plusDays(1));
+		spedizione.setDestCitta(clienteEntity.getCitta());
+		spedizione.setDestProvincia("RM");
+		spedizione.setDataCreazione(LocalDateTime.now());
+		spedizione.setDestIndirizzo(clienteEntity.getIndirizzo());
+		spedizione.setDestNome(clienteEntity.getCitta());
+		spedizione.setDestCap(clienteEntity.getCap());
+		spedizione.setDestPaese(clienteEntity.getPaese());
+		spedizione.setIdStato(1);
+		spedizione.setCostoSpedizione(BigDecimal.valueOf(30));
+		
+		Optional<Integer> idCorriereAttivoLibero = getCorriereLibero(spedizione);
+		
+		if(idCorriereAttivoLibero.isPresent()) {
+			spedizione.setIdCorriere(idCorriereAttivoLibero.get());
+		}
+		
+		else {
+			throw new CorrieriAttiviLiberiNotFoundException("ERRORE - NESSUN CORRIERE ATTIVO LIBERO TROVATO PER CREAZIONE SPEDIZIONE LEGATA A ORDINE: " + o.getId());
+		}
+		
+		return creaSpedizione(spedizione);
+		
+	}
+
+	private Optional<Integer> getCorriereLibero(SpedizioneModel spedizione) {
+		
+		TfStatoCorriere statoAttivo = statoCorriereRepository.findById(1).orElseThrow(() -> new EntityNotFoundException("ERRORE - STATO CORRIERE ATTIVO NON TROVATO NEGLI ARCHIVI"));
+		
+		Collection<TisCorrieri> corrieriLiberiAttivi = corrieriRepository.findByIdStatoCorriereAndAttivo(statoAttivo, true);
+		
+		if(corrieriLiberiAttivi.isEmpty()) {
+			return Optional.empty();
+		}
+		
+		return Optional.of(corrieriLiberiAttivi.iterator().next().getId());
+		
 	}
 
 }

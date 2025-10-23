@@ -5,7 +5,11 @@ import it.personalproject.spedizioni.domain.OrdineModel;
 
 public final class OrdineCreatedEvent extends OrdineEvent {
 	
-	private final MagazzinoModel magazzinoOrdine;
+	private MagazzinoModel magazzinoOrdine;
+	
+	public OrdineCreatedEvent() {
+		
+	}
 	
 	public OrdineCreatedEvent(OrdineModel ordine, MagazzinoModel magazzinoOrdine) {
 		super(ordine);

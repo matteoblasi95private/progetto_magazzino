@@ -1,6 +1,7 @@
 package it.personalproject.ordini.domain.events;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -8,6 +9,7 @@ import it.personalproject.ordini.domain.MagazzinoModel;
 import it.personalproject.ordini.domain.OrdineModel;
 import it.personalproject.ordini.domain.ports.OrdiniEventPublisherPort;
 
+@Component
 public class OrdineEventHandler {
 	
 	private final OrdiniEventPublisherPort ordiniEventPublisher;
@@ -18,8 +20,7 @@ public class OrdineEventHandler {
 	}
 	
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-	public void pubblicaEventoCreazioneOrdine(OrdineModel ordine, MagazzinoModel magazzino) {
-		OrdineCreatedEvent ordineCreatoEvent = new OrdineCreatedEvent(ordine, magazzino);
+	public void pubblicaEventoCreazioneOrdine(OrdineCreatedEvent ordineCreatoEvent) {
 		ordiniEventPublisher.publish(ordineCreatoEvent);
 	}
 	

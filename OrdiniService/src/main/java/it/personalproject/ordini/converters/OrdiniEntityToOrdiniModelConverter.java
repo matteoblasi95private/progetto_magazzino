@@ -6,6 +6,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
 import it.personalproject.ordini.domain.OrdineModel;
+import it.personalproject.ordini.domain.StatoOrdine;
 import it.personalproject.ordini.entities.TisOrdini;
 
 @Service
@@ -29,6 +30,8 @@ public class OrdiniEntityToOrdiniModelConverter implements Converter<TisOrdini, 
 			if(source.getIdProdotto() != null) {
 				result.setIdProdotto(source.getIdProdotto().getId());
 			}
+			
+			result.setStatoOrdine(StatoOrdine.valueOf(source.getIdStatoOrdine().getCodice()));
 			
 			result.setDataCreazione(source.getDataCreazione());
 			result.setDataAggiornamento(source.getDataAggiornamento());

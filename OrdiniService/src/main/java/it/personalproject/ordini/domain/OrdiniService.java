@@ -9,7 +9,7 @@ public interface OrdiniService {
 	
 	public OrdineModel getOrdine(Integer id);
 	
-	public void cancellaOrdine(Integer id);
+	public boolean cancellaOrdine(Integer id);
 	
 	public OrdineModel aggiornaOrdine(OrdineModel ordine);
 	

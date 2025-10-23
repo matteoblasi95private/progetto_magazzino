@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import it.personalproject.ordini.domain.events.OrdineEvent;
 import it.personalproject.ordini.domain.events.OrdineEventHandler;
+import it.personalproject.ordini.domain.exceptions.CorrieriAttiviLiberiNotFoundException;
 import it.personalproject.spedizioni.controller.ExceptionController;
 import it.personalproject.spedizioni.domain.ports.OrdiniEventKafkaListenerPort;
 
@@ -30,7 +31,7 @@ public class OrdiniEventKafkaInboundAdapter implements OrdiniEventKafkaListenerP
 
     @Override
     @KafkaListener(topics = "${spring.kafka.channels.ordini}", groupId="${spring.kafka.consumer.group-id}")
-    public void onEvent(OrdineEvent e) {
+    public void onEvent(OrdineEvent e) throws CorrieriAttiviLiberiNotFoundException {
 		log.info("ORDINI SERVICE - CONSUMER - TOPIC ORDINI - RICEVUTO EVENTO: {}", e);
         ordineEventHandler.handleEvent(e);
     }

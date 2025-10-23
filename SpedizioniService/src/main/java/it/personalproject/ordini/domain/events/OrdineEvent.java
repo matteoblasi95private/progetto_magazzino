@@ -6,7 +6,11 @@ import jakarta.validation.constraints.NotNull;
 public abstract sealed class OrdineEvent permits OrdineCreatedEvent, OrdineCancellatoEvent {
 	
 	@NotNull
-	protected final OrdineModel ordine;
+	protected OrdineModel ordine;
+	
+	public OrdineEvent() {
+		
+	}
 
 	public OrdineEvent(OrdineModel ordine) {
 		this.ordine = ordine;

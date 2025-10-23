@@ -3,6 +3,7 @@ package it.personalproject.spedizioni.domain;
 import java.util.Collection;
 import java.util.List;
 
+import it.personalproject.ordini.domain.exceptions.CorrieriAttiviLiberiNotFoundException;
 import it.personalproject.spedizioni.entities.TisSpedizioni;
 
 public interface SpedizioniService {
@@ -22,5 +23,7 @@ public interface SpedizioniService {
 	public String getStatoSpedizione(Integer id);
 
 	public Collection<StoricoSpedizioniModel> getStoricoSpedizione(Integer id);
+
+	public SpedizioneModel creaSpedizioneFromOrdine(OrdineModel o) throws CorrieriAttiviLiberiNotFoundException;
 
 }

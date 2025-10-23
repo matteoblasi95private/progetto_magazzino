@@ -115,12 +115,16 @@ public class OrdiniServiceImpl implements OrdiniService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void cancellaOrdine(Integer id) {
+	public boolean cancellaOrdine(Integer id) {
 		Optional<TisOrdini> ordineEntity = ordiniRepository.findById(id);
-		if(ordineEntity.isPresent()) {
+		if(ordineEntity.isPresent() && !ordineEntity.get().getIdStatoOrdine().getId().equals(2) && !ordineEntity.get().getIdStatoOrdine().getId().equals(5)) {
 			var ordineModel = ordiniEntityToOrdiniModelConverter.convert(ordineEntity.get());
-			ordiniRepository.delete(ordineEntity.get());
+			ordineEntity.get().setIdStatoOrdine(statoOrdineRepository.findById(2).orElseThrow(() -> new EntityNotFoundException("STATO ORDINE CANCELLATO (ID 2) NON TROVATO")));
 			events.publishEvent(new OrdineCancellatoEvent(ordineModel));
+			return true;
+		}
+		else {
+			return false;
 		}
 	}
 
