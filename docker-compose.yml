@@ -86,6 +86,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://magazzino-eureka:8761/eureka/"
     ports:
       - "9090:8080"
+      - "5005:5005"
     networks: [magazzino-net]
     depends_on:
       sqlserver-db:
@@ -108,6 +109,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://magazzino-eureka:8761/eureka/"
     ports:
       - "9091:8080"
+      - "5006:5005"
     networks: [magazzino-net]
     depends_on:
       sqlserver-db:
@@ -132,6 +134,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://magazzino-eureka:8761/eureka/"
     ports:
       - "9092:8080"
+      - "5009:5005"
     networks: [magazzino-net]
     depends_on:
       sqlserver-db:
@@ -158,6 +161,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://magazzino-eureka:8761/eureka/"
     ports:
       - "9095:8080"
+      - "5011:5005"
     networks: [magazzino-net]
     depends_on:
       sqlserver-db:
@@ -182,6 +186,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://magazzino-eureka:8761/eureka/"
     ports:
       - "9096:8080"
+      - "5012:5005"
     networks: [magazzino-net]
     depends_on:
       sqlserver-db:
@@ -205,6 +210,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://magazzino-eureka:8761/eureka/"
     ports:
       - "9097:8080"
+      - "5013:5005"
     networks: [magazzino-net]
     depends_on:
       sqlserver-db:

@@ -7,9 +7,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +36,8 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class SpedizioniServiceImpl implements SpedizioniService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SpedizioniServiceImpl.class);
 	
 	private final SpedizioniRepository spedizioniRepository;
 	
@@ -74,6 +79,8 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 		spedizioniEntity.setDataCreazione(LocalDateTime.now());
 		
 		spedizioniEntity.setDataAggiornamento(LocalDateTime.now());
+		
+		spedizioniEntity.setTrackingNumber(generaTrackingNumber());
 		
 		spedizioniEntity = spedizioniRepository.save(spedizioniEntity);
 		
@@ -134,7 +141,7 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 				
 		Collection<TisSpedizioni> spedizioniList = spedizioniRepository.findAll();
 		
-		if(spedizioniList == null || spedizioniList.isEmpty()) {
+		if(spedizioniList.isEmpty()) {
 			return Collections.emptyList();
 		}
 		
@@ -181,13 +188,14 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 	@Override
 	public SpedizioneModel creaSpedizioneFromOrdine(OrdineModel o) throws CorrieriAttiviLiberiNotFoundException {
 		
+		logger.info("CREAZIONE SPEDIZIONE DA [ORDINE: {}]", o);
+		
 		TisClienti clienteEntity = clientiRepository.findById(o.getIdCliente()).orElseThrow(() -> new EntityNotFoundException("ERRORE CREAZIONE SPEDIZIONE DA ORDINE " + o.getId() + " - CLIENTE NON TROVATO SUGLI ARCHIVI"));
 		
 		SpedizioneModel spedizione = new SpedizioneModel();
 		
 		spedizione.setIdOrdine(o.getId());
 		spedizione.setIdCliente(o.getIdCliente());
-		spedizione.setTrackingNumber("1");
 		spedizione.setDataConsegnaPrevista(LocalDateTime.now().plusDays(1));
 		spedizione.setDestCitta(clienteEntity.getCitta());
 		spedizione.setDestProvincia("RM");
@@ -224,6 +232,12 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 		}
 		
 		return Optional.of(corrieriLiberiAttivi.iterator().next().getId());
+		
+	}
+	
+	private String generaTrackingNumber() {
+		
+		return UUID.randomUUID().toString().replace("-", "").substring(0, 16).toUpperCase();
 		
 	}
 

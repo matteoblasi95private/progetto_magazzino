@@ -17,7 +17,8 @@ public class SpedizioniEntityToOrdiniModelConverter implements Converter<TisSped
 		SpedizioneModel result = null;
 		
 		if(source != null) {
-			
+			result = new SpedizioneModel();
+			result.setId(source.getId());
 			result.setCostoSpedizione(source.getCostoSpedizione());
 			result.setDataAggiornamento(source.getDataAggiornamento());
 			result.setDataConsegnaEffettiva(source.getDataConsegnaEffettiva());
@@ -33,6 +34,8 @@ public class SpedizioniEntityToOrdiniModelConverter implements Converter<TisSped
 			result.setIdOrdine(source.getOrdine().getId());
 			result.setIdStato(source.getStato().getId());
 			result.setTrackingNumber(source.getTrackingNumber());
+			result.setIdCorriere(source.getCorriere().getId());
+			result.setIdCliente(source.getOrdine().getIdCliente().getId());
 			
 		}
 		
