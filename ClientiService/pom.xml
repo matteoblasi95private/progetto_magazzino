@@ -98,6 +98,19 @@
   			<groupId>org.springframework.boot</groupId>
   			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
   		</dependency>
+  		
+  		
+  		<dependency>
+    		<groupId>org.testcontainers</groupId>
+    		<artifactId>testcontainers</artifactId>
+    		<scope>test</scope>
+		</dependency>
+
+		<dependency>
+    		<groupId>org.testcontainers</groupId>
+    		<artifactId>junit-jupiter</artifactId>
+    		<scope>test</scope>
+		</dependency>
 		
 		<dependency>
   			<groupId>org.testcontainers</groupId>
@@ -110,6 +123,18 @@
   			<artifactId>cucumber-java</artifactId>
   			<version>${cucumber.version}</version>
   			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+    		<groupId>io.rest-assured</groupId>
+    		<artifactId>rest-assured</artifactId>
+    		<scope>test</scope>
+		</dependency>
+
+		<dependency>
+    		<groupId>io.rest-assured</groupId>
+    		<artifactId>json-path</artifactId>
+    		<scope>test</scope>
 		</dependency>
 		
 	</dependencies>
