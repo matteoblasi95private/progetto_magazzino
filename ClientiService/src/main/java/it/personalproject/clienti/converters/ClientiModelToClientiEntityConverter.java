@@ -32,6 +32,7 @@ public class ClientiModelToClientiEntityConverter implements Converter<ClienteMo
 			result.setCitta(source.getCitta());
 			result.setPaese(source.getPaese());
 			result.setDataRegistrazione(source.getDataRegistrazione());
+			result.setCap(source.getCap());
 			
 			
 		}

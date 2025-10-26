@@ -80,7 +80,8 @@ CREATE TABLE [dbo].[TIS_CLIENTI](
 	[Cap] [varchar](10) NULL,
 	[Paese] [varchar](100) NULL,
 	[Data_registrazione] [datetime] NULL,
-	[Attivo] [bit] NULL
+	[Attivo] [bit] NULL,
+	CONSTRAINT CLIENTI_CF_UNIQUE UNIQUE(CodiceFiscale)
 )
 
 END

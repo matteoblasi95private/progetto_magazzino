@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 
 public class ClienteModel {
 	
-	@NotNull
 	private Integer id;
 	@NotNull
 	private String codiceFiscale;

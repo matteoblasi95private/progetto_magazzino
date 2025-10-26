@@ -1,4 +1,4 @@
-package it.personalproject.clienti.test;
+package it.personalproject.clienti.test.integration;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ class ClientiRepositoryIT {
 	@Container
 	static MSSQLServerContainer<?> sqlserver = new MSSQLServerContainer<>(
 			"mcr.microsoft.com/mssql/server:2022-latest"
-	).acceptLicense().withPassword("Str0ngP@ssw0rd!");;
+	).acceptLicense().withPassword("Str0ngP@ssw0rd!");
 	
 	@DynamicPropertySource
 	static void configureProperties(DynamicPropertyRegistry registry) {

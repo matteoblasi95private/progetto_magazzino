@@ -30,6 +30,7 @@ public class ClientiEntityToClientiModelConverter implements Converter<TisClient
 			result.setCitta(source.getCitta());
 			result.setPaese(source.getPaese());
 			result.setDataRegistrazione(source.getDataRegistrazione());
+			result.setCap(source.getCap());
 		}
 		
 		return result;

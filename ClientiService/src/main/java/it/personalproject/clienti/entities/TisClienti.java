@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "TIS_CLIENTI")
+@Table(name = "TIS_CLIENTI", uniqueConstraints = @UniqueConstraint(name = "CLIENTI_UNIQUE_CF", columnNames = "CodiceFiscale"))
 public class TisClienti {
 
     @Id
