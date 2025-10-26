@@ -3,6 +3,7 @@ package it.personalproject.giacenze.controller;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import it.personalproject.giacenze.domain.GiacenzeService;
 import it.personalproject.giacenze.domain.MagazzinoModel;
 import it.personalproject.giacenze.domain.StoricoMagazzinoModel;
 import it.personalproject.giacenze.domain.TrasferimentoProdottoDTO;
+import it.personalproject.giacenze.exceptions.StockNotFoundException;
 import it.personalproject.storico.StoricoService;
 import jakarta.validation.Valid;
 
@@ -54,15 +56,12 @@ public class GiacenzeController {
 	@GetMapping("/dettaglio")
 	public ResponseEntity<GiacenzeModel> getDettaglioStock(@RequestParam("idprodotto") Integer idProdotto, @RequestParam("idmagazzino") Integer idMagazzino) {
 		
-		GiacenzeModel stock = giacenzeService.getDettaglioStock(idProdotto, idMagazzino);
+		return ResponseEntity.of(giacenzeService.getDettaglioStock(idProdotto, idMagazzino));
 		
-		return ResponseEntity
-	            .status(HttpStatus.OK)
-	            .body(stock);
 	}
 	
 	@PutMapping("/modifica")
-	public ResponseEntity<GiacenzeModel> aggiornaQuantita(@Valid @RequestBody GiacenzeModel giacenza) {
+	public ResponseEntity<GiacenzeModel> aggiornaQuantita(@Valid @RequestBody GiacenzeModel giacenza) throws StockNotFoundException {
 		
 		GiacenzeModel stockAggiornato = giacenzeService.aggiornaQuantita(giacenza);
 		
@@ -106,7 +105,7 @@ public class GiacenzeController {
 	}
 	
 	@PostMapping("/trasferimento")
-	public ResponseEntity<GiacenzeModel> trasferisciProdotto(@RequestBody TrasferimentoProdottoDTO trasferimentoDTO) {
+	public ResponseEntity<GiacenzeModel> trasferisciProdotto(@RequestBody TrasferimentoProdottoDTO trasferimentoDTO) throws StockNotFoundException {
 		
 		
 		GiacenzeModel giacenzaAggiornata = giacenzeService.trasferisciProdotto(trasferimentoDTO);
@@ -118,7 +117,7 @@ public class GiacenzeController {
 	
 	
 	@PostMapping("/cancella")
-	public ResponseEntity<GiacenzeModel> cancellaGiacenza(@Valid @RequestBody GiacenzeModel giacenza) {
+	public ResponseEntity<GiacenzeModel> cancellaGiacenza(@Valid @RequestBody GiacenzeModel giacenza) throws StockNotFoundException {
 		
 		
 		giacenzeService.cancellaGiacenza(giacenza);

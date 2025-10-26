@@ -1,12 +1,13 @@
 package it.personalproject.prodotti.domain;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProdottiService {
 	
 	public ProdottiModel creaProdotto(ProdottiModel ordine);
 	
-	public ProdottiModel getProdotto(Integer id);
+	public Optional<ProdottiModel> getProdotto(Integer id);
 	
 	public void cancellaProdotto(Integer id);
 	

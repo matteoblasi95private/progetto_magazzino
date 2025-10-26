@@ -24,6 +24,7 @@ import it.personalproject.giacenze.entities.TisGiacenzePK;
 import it.personalproject.giacenze.entities.TisMagazzini;
 import it.personalproject.giacenze.entities.TisMagazzinoStoricoMovimenti;
 import it.personalproject.giacenze.entities.TisProdotti;
+import it.personalproject.giacenze.exceptions.StockNotFoundException;
 import it.personalproject.giacenze.repositories.GiacenzeRepository;
 import it.personalproject.giacenze.repositories.MagazziniRepository;
 import it.personalproject.giacenze.repositories.ProdottiRepository;
@@ -105,25 +106,24 @@ public class GiacenzeServiceImpl implements GiacenzeService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public GiacenzeModel getDettaglioStock(Integer idProdotto, Integer idMagazzino) {
-		
-		GiacenzeModel result = null;
-		
+	public Optional<GiacenzeModel> getDettaglioStock(Integer idProdotto, Integer idMagazzino) {
+				
 		TisGiacenzePK giacenzaPK = new TisGiacenzePK(idMagazzino, idProdotto);
 		
 		Optional<TisGiacenze> giacenzeEntity = giacenzeRepository.findById(giacenzaPK);
 		
 		if(giacenzeEntity.isPresent()) {
-			result = giacenzaEntityToModelConverter.convert(giacenzeEntity.get());
+			return Optional.of(giacenzaEntityToModelConverter.convert(giacenzeEntity.get()));
 		}
-		
-		return result;
+		else {
+			return Optional.empty();
+		}
 		
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public GiacenzeModel aggiornaQuantita(GiacenzeModel giacenza) {
+	public GiacenzeModel aggiornaQuantita(GiacenzeModel giacenza) throws StockNotFoundException {
 		
 		if(giacenza.getQuantitaDisponibile().compareTo(0) <= 0) {
 			throw new IllegalArgumentException("ERRORE AGGIORNAMENTO STOCK " + giacenza + " - QUANTITA INFERIORE O UGUALE A ZERO");
@@ -131,7 +131,7 @@ public class GiacenzeServiceImpl implements GiacenzeService {
 		
 		TisGiacenzePK giacenzaPK = new TisGiacenzePK(giacenza.getMagazzino().getId(), giacenza.getProdotto().getId());
 		
-		TisGiacenze giacenzaEntity = giacenzeRepository.findById(giacenzaPK).orElseThrow(() -> new EntityNotFoundException("ERRORE METODO AGGIORNA QUANITTA - GIACENZA NON TROVATA ASSOCIATA A CHIAVE: " + giacenzaPK));
+		TisGiacenze giacenzaEntity = giacenzeRepository.findById(giacenzaPK).orElseThrow(() -> new StockNotFoundException("ERRORE METODO AGGIORNA QUANITTA - GIACENZA NON TROVATA ASSOCIATA A CHIAVE: " + giacenzaPK));
 
 		giacenzaEntity.setQuantitaDisponibile(giacenza.getQuantitaDisponibile());
 		
@@ -150,7 +150,7 @@ public class GiacenzeServiceImpl implements GiacenzeService {
 		
 		Collection<TisGiacenze> listaStocksEntitiesProdotto = giacenzeRepository.getListaStockProdotto(idProdotto);
 		
-		if(listaStocksEntitiesProdotto == null || listaStocksEntitiesProdotto.isEmpty()) {
+		if(listaStocksEntitiesProdotto.isEmpty()) {
 			return Collections.emptyList();
 		}
 		
@@ -192,11 +192,11 @@ public class GiacenzeServiceImpl implements GiacenzeService {
 	}
 
 	@Override
-	public GiacenzeModel trasferisciProdotto(TrasferimentoProdottoDTO trasferimentoDTO) {
+	public GiacenzeModel trasferisciProdotto(TrasferimentoProdottoDTO trasferimentoDTO) throws StockNotFoundException {
 		
 		TisGiacenzePK giacenzaAttualePK = new TisGiacenzePK(trasferimentoDTO.idMagazzinoPrecedente(), trasferimentoDTO.idProdotto());
 		
-		TisGiacenze giacenzaAttuale = giacenzeRepository.findById(giacenzaAttualePK).orElseThrow(() -> new EntityNotFoundException("GIACENZA NON TROVATA PER TRASFERIMENTO " + trasferimentoDTO));
+		TisGiacenze giacenzaAttuale = giacenzeRepository.findById(giacenzaAttualePK).orElseThrow(() -> new StockNotFoundException("GIACENZA NON TROVATA PER TRASFERIMENTO " + trasferimentoDTO));
 		
 		if(giacenzaAttuale.getQuantitaDisponibile().compareTo(trasferimentoDTO.quantitaTrasferita()) < 0) {
 			throw new IllegalStateException("ERRORE METODO trasferisciProdotto per trasferimento " + trasferimentoDTO + " - QUANTITA DISPONIBILE MINORE DI QUELLA TRAASFERITA");
@@ -227,11 +227,11 @@ public class GiacenzeServiceImpl implements GiacenzeService {
 	}
 
 	@Override
-	public void cancellaGiacenza(GiacenzeModel giacenza) {
+	public void cancellaGiacenza(GiacenzeModel giacenza) throws StockNotFoundException {
 		
 		TisGiacenzePK giacenzaPK = new TisGiacenzePK(giacenza.getMagazzino().getId(), giacenza.getProdotto().getId());
 		
-		TisGiacenze giacenzaEntity = giacenzeRepository.findById(giacenzaPK).orElseThrow(() -> new EntityNotFoundException("GIACENZA NON TROVATA PER CANCELLAZIONE"));
+		TisGiacenze giacenzaEntity = giacenzeRepository.findById(giacenzaPK).orElseThrow(() -> new StockNotFoundException("GIACENZA NON TROVATA PER CANCELLAZIONE"));
 
 		giacenzeRepository.delete(giacenzaEntity);
 		

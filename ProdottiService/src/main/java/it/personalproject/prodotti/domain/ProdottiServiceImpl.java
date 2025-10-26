@@ -47,18 +47,17 @@ public class ProdottiServiceImpl implements ProdottiService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public ProdottiModel getProdotto(Integer id) {
-		
-		ProdottiModel result = null;
-	
+	public Optional<ProdottiModel> getProdotto(Integer id) {
+			
 		Optional<TisProdotti> clienteEntity = prodottiRepository.findById(id);
 		
 		if(clienteEntity.isPresent()) {
-			result = prodottiEntityToClientiModelConverter.convert(clienteEntity.get());
+			return Optional.of(prodottiEntityToClientiModelConverter.convert(clienteEntity.get()));
 		}
-		
-		return result;
-		
+		else {
+			return Optional.empty();
+		}
+				
 	}
 
 	@Override
@@ -108,12 +107,10 @@ public class ProdottiServiceImpl implements ProdottiService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ProdottiModel> getAllProdotti() {
-		
-		var result = new LinkedList<>();
-		
+				
 		var prodottiList = prodottiRepository.findAll();
 		
-		if(prodottiList == null || prodottiList.isEmpty()) {
+		if(prodottiList.isEmpty()) {
 			return Collections.emptyList();
 		}
 		

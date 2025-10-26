@@ -1,16 +1,19 @@
 package it.personalproject.clienti.domain;
 
 import java.util.Collection;
+import java.util.Optional;
+
+import it.personalproject.clienti.exceptions.ClienteNotFoundException;
 
 public interface ClientiService {
 	
 	public ClienteModel creaCliente(ClienteModel ordine);
 	
-	public ClienteModel getCliente(Integer id);
+	public Optional<ClienteModel> getCliente(Integer id);
 	
 	public void cancellaCliente(Integer id);
 	
-	public ClienteModel aggiornaCliente(ClienteModel ordine);
+	public ClienteModel aggiornaCliente(ClienteModel ordine) throws ClienteNotFoundException;
 	
 	public Collection<ClienteModel> getAllClienti();
 

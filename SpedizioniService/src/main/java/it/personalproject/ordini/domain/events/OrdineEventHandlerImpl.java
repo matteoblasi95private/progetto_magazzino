@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import it.personalproject.ordini.domain.exceptions.CorrieriAttiviLiberiNotFoundException;
 import it.personalproject.spedizioni.domain.SpedizioniService;
+import it.personalproject.spedizioni.exceptions.SpedizioneNotFoundException;
 
 @Component
 public class OrdineEventHandlerImpl implements OrdineEventHandler {
@@ -16,7 +17,7 @@ public class OrdineEventHandlerImpl implements OrdineEventHandler {
 	private SpedizioniService spedizioniService;
 
 	@Override
-	public void handleEvent(OrdineEvent e) throws CorrieriAttiviLiberiNotFoundException {
+	public void handleEvent(OrdineEvent e) throws CorrieriAttiviLiberiNotFoundException, SpedizioneNotFoundException {
 		
 		switch(e) {
 			case OrdineCreatedEvent o -> spedizioniService.creaSpedizioneFromOrdine(o.getOrdine());

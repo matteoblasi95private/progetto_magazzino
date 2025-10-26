@@ -186,5 +186,47 @@ public class ClientiServiceIT {
 		.body("id", equalTo(id));
 		
 	}
+	
+	@Test
+	void delete_then_404() {
+		
+		var payload = """
+				{
+				"codiceFiscale": "RSSMRA84A01H501U",
+				"nome": "Mario",
+				"cognome": "Rossi",
+				"email": "aaa@bbb",
+				"telefono": "1234",
+				"indirizzo": "Via Roma 1",
+				"citta": "Roma",
+				"cap": "00042",
+				"paese": "Italia"
+				}
+				""";
+		
+		var id = given()
+		.contentType("application/json")
+		.body(payload)
+		.when()
+		.post("/clienti/crea")
+		.then()
+		.statusCode(201).extract().path("id");
+		
+		
+		given()
+		.contentType("application/json")
+		.when()
+		.delete("/clienti/{id}", id)
+		.then()
+		.statusCode(204);
+		
+		given()
+		.contentType("application/json")
+		.when()
+		.get("/clienti/{id}", id)
+		.then()
+		.statusCode(404);
+		
+	}
 
 }

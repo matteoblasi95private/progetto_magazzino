@@ -26,6 +26,7 @@ import it.personalproject.spedizioni.entities.TisClienti;
 import it.personalproject.spedizioni.entities.TisCorrieri;
 import it.personalproject.spedizioni.entities.TisSpedizioni;
 import it.personalproject.spedizioni.entities.TisSpedizioniStorico;
+import it.personalproject.spedizioni.exceptions.SpedizioneNotFoundException;
 import it.personalproject.spedizioni.repositories.ClientiRepository;
 import it.personalproject.spedizioni.repositories.CorrieriRepository;
 import it.personalproject.spedizioni.repositories.SpedizioniRepository;
@@ -92,25 +93,25 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public SpedizioneModel getSpedizione(Integer id) {
-		
-		SpedizioneModel result = null;
-	
+	public Optional<SpedizioneModel> getSpedizione(Integer id) {
+			
 		Optional<TisSpedizioni> ordineEntity = spedizioniRepository.findById(id);
 		
 		if(ordineEntity.isPresent()) {
-			result = spedizioniEntityToOrdiniModelConverter.convert(ordineEntity.get());
+			return Optional.of(spedizioniEntityToOrdiniModelConverter.convert(ordineEntity.get()));
 		}
 		
-		return result;
-		
+		else {
+			return Optional.empty();
+		}
+				
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void cancellaSpedizione(Integer id) {
+	public void cancellaSpedizione(Integer id) throws SpedizioneNotFoundException {
 		
-		TisSpedizioni spedizioneEntity = spedizioniRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("SPEDIZIONE NON TROVATA ASSOCIATO A ID " + id));
+		TisSpedizioni spedizioneEntity = spedizioniRepository.findById(id).orElseThrow(() -> new SpedizioneNotFoundException("SPEDIZIONE NON TROVATA ASSOCIATO A ID " + id));
 		
 		spedizioneEntity.setStato(statoSpedizioneRepository.findByCodice("ANNULLATA").orElseThrow(() -> new EntityNotFoundException("STATO ASSOCIATO A ANNULLATA NON TROVATO")));
 		
@@ -121,13 +122,13 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public SpedizioneModel aggiornaSpedizione(SpedizioneModel spedizione) {
+	public SpedizioneModel aggiornaSpedizione(SpedizioneModel spedizione) throws SpedizioneNotFoundException {
 		
 		if(spedizione.getId() == null) {
 			throw new IllegalArgumentException("ERRORE AGGIORNA ORDINE " + spedizione.getId() + " - ID SPEDIZIONE NON VALORIZZATO");
 		}
 		
-		TisSpedizioni spedizioneEntity = spedizioniRepository.findById(spedizione.getId()).orElseThrow(() -> new EntityNotFoundException("SPEDIZIONE NON TROVATA ASSOCIATO A ID " + spedizione.getId()));
+		TisSpedizioni spedizioneEntity = spedizioniRepository.findById(spedizione.getId()).orElseThrow(() -> new SpedizioneNotFoundException("SPEDIZIONE NON TROVATA ASSOCIATO A ID " + spedizione.getId()));
 				
 		spedizioneEntity.setDataAggiornamento(LocalDateTime.now());
 		
@@ -161,9 +162,9 @@ public class SpedizioniServiceImpl implements SpedizioniService {
 	}
 
 	@Override
-	public String getStatoSpedizione(Integer id) {
+	public String getStatoSpedizione(Integer id) throws SpedizioneNotFoundException {
 		
-		TisSpedizioni spedizioneEntity = spedizioniRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("SPEDIZIONE NON TROVATA ASSOCIATO A ID " + id));
+		TisSpedizioni spedizioneEntity = spedizioniRepository.findById(id).orElseThrow(() -> new SpedizioneNotFoundException("SPEDIZIONE NON TROVATA ASSOCIATO A ID " + id));
 
 		if(spedizioneEntity.getStato() == null || StringUtils.isBlank(spedizioneEntity.getStato().getCodice())) {
 			throw new IllegalStateException("ERRORE METODO getStatoSpedizione [ID-SPEDIZIONE: " + id + "] - STATO ASSOCIATO A SPEDIZIONE NON VALORIZZATO");

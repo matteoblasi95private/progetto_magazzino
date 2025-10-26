@@ -3,6 +3,7 @@ package it.personalproject.magazzini.controller;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.personalproject.magazzini.domain.MagazzinoModel;
 import it.personalproject.magazzini.domain.MagazzinoService;
+import it.personalproject.magazzini.exceptions.MagazzinoNotFoundException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -44,11 +46,9 @@ public class MagazziniController {
 	@GetMapping("/{id}")
 	public ResponseEntity<MagazzinoModel> getMagazzino(@PathVariable("id") Integer id) {
 		
-		MagazzinoModel spedizione = magazzinoService.getMagazzino(id);
+		Optional<MagazzinoModel> spedizione = magazzinoService.getMagazzino(id);
 		
-		return ResponseEntity
-	            .status(HttpStatus.OK)
-	            .body(spedizione);
+		return ResponseEntity.of(spedizione);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -60,7 +60,7 @@ public class MagazziniController {
 	}
 	
 	@PutMapping("/modifica")
-	public ResponseEntity<MagazzinoModel> aggiornaMagazzino(@Valid @RequestBody MagazzinoModel ordine) {
+	public ResponseEntity<MagazzinoModel> aggiornaMagazzino(@Valid @RequestBody MagazzinoModel ordine) throws MagazzinoNotFoundException {
 		
 		MagazzinoModel aggiornato = magazzinoService.aggiornaMagazzino(ordine);
 		

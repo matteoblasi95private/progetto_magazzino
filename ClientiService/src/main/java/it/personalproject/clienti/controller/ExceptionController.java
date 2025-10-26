@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import it.personalproject.clienti.exceptions.ClienteNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
@@ -20,6 +21,11 @@ public class ExceptionController {
 
     private static final Logger log = LoggerFactory.getLogger(ExceptionController.class);
 
+    @ExceptionHandler(ClienteNotFoundException.class)
+    public ProblemDetail handleResourceNotFoundException(ClienteNotFoundException e, HttpServletRequest req) {
+    	return buildProblemDetail(e, "4", req, HttpStatus.NOT_FOUND);
+    }
+    
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleConstraintViolationException(DataIntegrityViolationException e, HttpServletRequest req) {
     	return buildProblemDetail(e, "3", req, HttpStatus.CONFLICT);

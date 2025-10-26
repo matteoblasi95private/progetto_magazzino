@@ -23,6 +23,7 @@ import it.personalproject.ordini.converters.OrdiniEntityToOrdiniModelConverter;
 import it.personalproject.ordini.entities.TisClienti;
 import it.personalproject.ordini.entities.TisOrdini;
 import it.personalproject.ordini.entities.TisProdotti;
+import it.personalproject.ordini.exception.OrdineNotFoundException;
 import it.personalproject.ordini.repositories.ClientiRepository;
 import it.personalproject.ordini.repositories.OrdiniRepository;
 import it.personalproject.ordini.repositories.ProdottiRepository;
@@ -99,18 +100,18 @@ public class OrdiniServiceImpl implements OrdiniService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public OrdineModel getOrdine(Integer id) {
-		
-		OrdineModel result = null;
-	
+	public Optional<OrdineModel> getOrdine(Integer id) {
+			
 		Optional<TisOrdini> ordineEntity = ordiniRepository.findById(id);
 		
 		if(ordineEntity.isPresent()) {
-			result = ordiniEntityToOrdiniModelConverter.convert(ordineEntity.get());
+			return Optional.of(ordiniEntityToOrdiniModelConverter.convert(ordineEntity.get()));
 		}
 		
-		return result;
-		
+		else {
+			return Optional.empty();
+		}
+				
 	}
 
 	@Override
@@ -130,7 +131,7 @@ public class OrdiniServiceImpl implements OrdiniService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public OrdineModel aggiornaOrdine(OrdineModel ordine) {
+	public OrdineModel aggiornaOrdine(OrdineModel ordine) throws OrdineNotFoundException {
 		
 		Optional<TisOrdini> optionalOrdine = ordiniRepository.findById(ordine.getId());
 		
@@ -162,7 +163,7 @@ public class OrdiniServiceImpl implements OrdiniService {
 		}
 		
 		else {
-			throw new EntityNotFoundException("ORDINE NON TROVATO ASSOCIATO A ID " + ordine.getId());
+			throw new OrdineNotFoundException("ORDINE NON TROVATO ASSOCIATO A ID " + ordine.getId());
 		}
 		
 	}
@@ -173,7 +174,7 @@ public class OrdiniServiceImpl implements OrdiniService {
 		
 		List<TisOrdini> ordiniList = ordiniRepository.findAll();
 		
-		if(ordiniList == null || ordiniList.isEmpty()) {
+		if(ordiniList.isEmpty()) {
 			return Collections.emptyList();
 		}
 		

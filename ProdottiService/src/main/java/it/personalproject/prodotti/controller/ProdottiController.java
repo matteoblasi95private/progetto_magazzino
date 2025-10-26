@@ -2,6 +2,7 @@ package it.personalproject.prodotti.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,12 +43,7 @@ public class ProdottiController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<ProdottiModel> getProdotto(@PathVariable("id") Integer id) {
-		
-		ProdottiModel prodotto = prodottiService.getProdotto(id);
-		
-		return ResponseEntity
-	            .status(HttpStatus.OK)
-	            .body(prodotto);
+		return ResponseEntity.of(prodottiService.getProdotto(id));		
 	}
 	
 	@DeleteMapping("/{id}")

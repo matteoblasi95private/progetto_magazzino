@@ -3,6 +3,7 @@ package it.personalproject.clienti.controller;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.personalproject.clienti.domain.ClienteModel;
 import it.personalproject.clienti.domain.ClientiService;
+import it.personalproject.clienti.exceptions.ClienteNotFoundException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -43,12 +45,7 @@ public class ClientiController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<ClienteModel> getCliente(@PathVariable("id") Integer id) {
-		
-		ClienteModel cliente = clientiService.getCliente(id);
-		
-		return ResponseEntity
-	            .status(HttpStatus.OK)
-	            .body(cliente);
+		return ResponseEntity.of(clientiService.getCliente(id));
 	}
 	
 	@DeleteMapping("/{id}")
@@ -60,7 +57,7 @@ public class ClientiController {
 	}
 	
 	@PutMapping("/modifica")
-	public ResponseEntity<ClienteModel> aggiornaCliente(@Valid @RequestBody ClienteModel cliente) {
+	public ResponseEntity<ClienteModel> aggiornaCliente(@Valid @RequestBody ClienteModel cliente) throws ClienteNotFoundException {
 		
 		ClienteModel aggiornato = clientiService.aggiornaCliente(cliente);
 		

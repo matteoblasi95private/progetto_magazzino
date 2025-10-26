@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import it.personalproject.clienti.converters.ClientiEntityToClientiModelConverter;
 import it.personalproject.clienti.converters.ClientiModelToClientiEntityConverter;
 import it.personalproject.clienti.entities.TisClienti;
+import it.personalproject.clienti.exceptions.ClienteNotFoundException;
 import it.personalproject.clienti.repositories.ClientiRepository;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -48,14 +49,17 @@ public class ClientiServiceImpl implements ClientiService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public ClienteModel getCliente(Integer id) {
+	public Optional<ClienteModel> getCliente(Integer id) {
 		
-		ClienteModel result = null;
+		Optional<ClienteModel> result;
 	
 		Optional<TisClienti> clienteEntity = clientiRepository.findById(id);
 		
 		if(clienteEntity.isPresent()) {
-			result = clientiEntityToClientiModelConverter.convert(clienteEntity.get());
+			result = Optional.of(clientiEntityToClientiModelConverter.convert(clienteEntity.get()));
+		}
+		else {
+			result = Optional.empty();
 		}
 		
 		return result;
@@ -73,7 +77,7 @@ public class ClientiServiceImpl implements ClientiService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public ClienteModel aggiornaCliente(ClienteModel cliente) {
+	public ClienteModel aggiornaCliente(ClienteModel cliente) throws ClienteNotFoundException {
 		
 		if(cliente.getId() == null) {
 			throw new IllegalArgumentException("ERRORE AGGIORNA cliente " + cliente.getId() + " - ID CLIENTE O ID PRODOTTO NON VALORIZZATI");
@@ -101,7 +105,7 @@ public class ClientiServiceImpl implements ClientiService {
 		}
 		
 		else {
-			throw new EntityNotFoundException("CLIENTE NON TROVATO ASSOCIATO A ID " + cliente.getId());
+			throw new ClienteNotFoundException("ERRORE aggiornaCliente [ID: " + cliente.getId() + "] - CLIENTE NOT FOUND");
 		}
 		
 	}

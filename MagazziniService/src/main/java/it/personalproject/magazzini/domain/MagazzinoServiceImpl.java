@@ -15,6 +15,7 @@ import it.personalproject.magazzini.converters.MagazziniEntityToMagazziniModelCo
 import it.personalproject.magazzini.converters.MagazziniModelToMagazziniEntityConverter;
 import it.personalproject.magazzini.entities.TisMagazzini;
 import it.personalproject.magazzini.entities.TisMagazzinoStoricoMovimenti;
+import it.personalproject.magazzini.exceptions.MagazzinoNotFoundException;
 import it.personalproject.magazzini.repositories.MagazziniRepository;
 import it.personalproject.magazzini.repositories.StoricoMagazziniRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -47,27 +48,24 @@ public class MagazzinoServiceImpl implements MagazzinoService {
 		magazzinoEntity.setDataCreazione(LocalDateTime.now());
 				
 		magazzinoEntity = magazziniRepository.save(magazzinoEntity);
-		
-		//scriviStoricoMagazzino(magazzinoEntity, "CREAZIONE");
-		
+				
 		return magazziniEntityToMagazziniModelConverter.convert(magazzinoEntity);
 		
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public MagazzinoModel getMagazzino(Integer id) {
-		
-		MagazzinoModel result = null;
-	
+	public Optional<MagazzinoModel> getMagazzino(Integer id) {
+			
 		Optional<TisMagazzini> magazziniEntity = magazziniRepository.findById(id);
 		
 		if(magazziniEntity.isPresent()) {
-			result = magazziniEntityToMagazziniModelConverter.convert(magazziniEntity.get());
+			return Optional.of(magazziniEntityToMagazziniModelConverter.convert(magazziniEntity.get()));
 		}
-		
-		return result;
-		
+		else {
+			return Optional.empty();
+		}
+				
 	}
 
 	@Override
@@ -84,13 +82,13 @@ public class MagazzinoServiceImpl implements MagazzinoService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public MagazzinoModel aggiornaMagazzino(MagazzinoModel magazzino) {
+	public MagazzinoModel aggiornaMagazzino(MagazzinoModel magazzino) throws MagazzinoNotFoundException {
 		
 		if(magazzino.getId() == null) {
 			throw new IllegalArgumentException("ERRORE AGGIORNA ORDINE " + magazzino.getId() + " - ID SPEDIZIONE NON VALORIZZATO");
 		}
 		
-		TisMagazzini magazzinoEntity = magazziniRepository.findById(magazzino.getId()).orElseThrow(() -> new EntityNotFoundException("SPEDIZIONE NON TROVATA ASSOCIATO A ID " + magazzino.getId()));
+		TisMagazzini magazzinoEntity = magazziniRepository.findById(magazzino.getId()).orElseThrow(() -> new MagazzinoNotFoundException("SPEDIZIONE NON TROVATA ASSOCIATO A ID " + magazzino.getId()));
 				
 		
 		return magazziniEntityToMagazziniModelConverter.convert(magazziniRepository.save(magazzinoEntity));

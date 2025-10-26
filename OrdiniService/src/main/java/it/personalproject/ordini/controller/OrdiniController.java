@@ -3,6 +3,7 @@ package it.personalproject.ordini.controller;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import it.personalproject.ordini.domain.CreaOrdineResponse;
 import it.personalproject.ordini.domain.OrdineModel;
 import it.personalproject.ordini.domain.OrdiniService;
+import it.personalproject.ordini.exception.OrdineNotFoundException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -46,11 +48,9 @@ public class OrdiniController {
 	@GetMapping("/{id}")
 	public ResponseEntity<OrdineModel> getOrdine(@PathVariable("id") Integer id) {
 		
-		OrdineModel ordine = ordiniService.getOrdine(id);
+		Optional<OrdineModel> ordine = ordiniService.getOrdine(id);
 		
-		return ResponseEntity
-	            .status(HttpStatus.OK)
-	            .body(ordine);
+		return ResponseEntity.of(ordine);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -64,7 +64,7 @@ public class OrdiniController {
 	}
 	
 	@PutMapping("/modifica")
-	public ResponseEntity<OrdineModel> aggiornaOrdine(@Valid @RequestBody OrdineModel ordine) {
+	public ResponseEntity<OrdineModel> aggiornaOrdine(@Valid @RequestBody OrdineModel ordine) throws OrdineNotFoundException {
 		OrdineModel aggiornato = ordiniService.aggiornaOrdine(ordine);
 		
 		return ResponseEntity

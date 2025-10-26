@@ -3,6 +3,7 @@ package it.personalproject.spedizioni.controller;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import it.personalproject.spedizioni.domain.SpedizioneModel;
 import it.personalproject.spedizioni.domain.SpedizioniService;
 import it.personalproject.spedizioni.domain.StoricoSpedizioniModel;
+import it.personalproject.spedizioni.exceptions.SpedizioneNotFoundException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -45,15 +47,13 @@ public class SpedizioniController {
 	@GetMapping("/{id}")
 	public ResponseEntity<SpedizioneModel> getSpedizione(@PathVariable("id") Integer id) {
 		
-		SpedizioneModel spedizione = spedizioniService.getSpedizione(id);
+		Optional<SpedizioneModel> spedizione = spedizioniService.getSpedizione(id);
 		
-		return ResponseEntity
-	            .status(HttpStatus.OK)
-	            .body(spedizione);
+		return ResponseEntity.of(spedizione);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity cancellaSpedizione(@PathVariable("id") Integer id) {
+	public ResponseEntity cancellaSpedizione(@PathVariable("id") Integer id) throws SpedizioneNotFoundException {
 		
 		spedizioniService.cancellaSpedizione(id);
 		
@@ -61,7 +61,8 @@ public class SpedizioniController {
 	}
 	
 	@PutMapping("/modifica")
-	public ResponseEntity<SpedizioneModel> aggiornaSpedizione(@Valid @RequestBody SpedizioneModel spedizione) {
+	public ResponseEntity<SpedizioneModel> aggiornaSpedizione(@Valid @RequestBody SpedizioneModel spedizione) throws SpedizioneNotFoundException {
+		
 		SpedizioneModel aggiornato = spedizioniService.aggiornaSpedizione(spedizione);
 		
 		return ResponseEntity
@@ -82,7 +83,7 @@ public class SpedizioniController {
 	
 	
 	@GetMapping("/{id}/stato")
-	public ResponseEntity<String> getStatoSpedizione(@PathVariable("id") Integer id) {
+	public ResponseEntity<String> getStatoSpedizione(@PathVariable("id") Integer id) throws SpedizioneNotFoundException {
 		
 		String statoCorrente = spedizioniService.getStatoSpedizione(id);
 		
