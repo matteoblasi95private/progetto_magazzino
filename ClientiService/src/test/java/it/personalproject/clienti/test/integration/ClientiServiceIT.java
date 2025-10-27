@@ -192,7 +192,7 @@ public class ClientiServiceIT {
 		
 		var payload = """
 				{
-				"codiceFiscale": "RSSMRA84A01H501U",
+				"codiceFiscale": "RSSMRA86A01H501U",
 				"nome": "Mario",
 				"cognome": "Rossi",
 				"email": "aaa@bbb",
@@ -226,6 +226,65 @@ public class ClientiServiceIT {
 		.get("/clienti/{id}", id)
 		.then()
 		.statusCode(404);
+		
+	}
+	
+	@Test
+	void updateCliente() {
+		
+		
+		var payload = """
+				{
+				"codiceFiscale": "RSSMRA84A01H501U",
+				"nome": "Mario",
+				"cognome": "Rossi",
+				"email": "aaa@bbb",
+				"telefono": "1234",
+				"indirizzo": "Via Roma 1",
+				"citta": "Roma",
+				"cap": "00042",
+				"paese": "Italia"
+				}
+				""";
+		
+		var id = given()
+		.contentType("application/json")
+		.body(payload)
+		.when()
+		.post("/clienti/crea")
+		.then()
+		.statusCode(201).extract().path("id");
+		
+		payload = String.format("""
+				{
+				"id": %s,
+				"codiceFiscale": "RSSMRA84A01H501U",
+				"nome": "Luca",
+				"cognome": "Verdi",
+				"email": "ccc@ddd",
+				"telefono": "3456",
+				"indirizzo": "Via Verdi 3",
+				"citta": "Latina",
+				"cap": "04100",
+				"paese": "Italia"
+				}
+				""", id.toString());
+		
+		given()
+		.contentType("application/json")
+		.body(payload)
+		.when()
+		.put("/clienti/modifica")
+		.then()
+		.statusCode(200)
+		.body("nome", equalTo("Luca"))
+		.body("cognome", equalTo("Verdi"))
+		.body("email", equalTo("ccc@ddd"))
+		.body("telefono", equalTo("3456"))
+		.body("indirizzo", equalTo("Via Verdi 3"))
+		.body("citta", equalTo("Latina"))
+		.body("cap", equalTo("04100"))
+		.body("paese", equalTo("Italia"));
 		
 	}
 
