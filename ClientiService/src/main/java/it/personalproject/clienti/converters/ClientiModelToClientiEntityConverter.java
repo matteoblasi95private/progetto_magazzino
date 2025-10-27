@@ -33,6 +33,7 @@ public class ClientiModelToClientiEntityConverter implements Converter<ClienteMo
 			result.setPaese(source.getPaese());
 			result.setDataRegistrazione(source.getDataRegistrazione());
 			result.setCap(source.getCap());
+			result.setAttivo(source.getAttivo());
 			
 			
 		}

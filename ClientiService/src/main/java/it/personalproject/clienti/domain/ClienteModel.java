@@ -27,7 +27,33 @@ public class ClienteModel {
 	private String cap;
 	@NotNull
 	private String paese;
+	
+	@NotNull
+	private Boolean attivo;
+	
+	
 	private LocalDateTime dataRegistrazione;
+	
+	
+	public ClienteModel() {
+		
+	}
+	
+	public ClienteModel(Integer id, @NotNull String codiceFiscale, @NotNull String nome, @NotNull String cognome,
+			@NotNull @Email String email, String telefono, @NotNull String indirizzo, @NotNull String citta,
+			@NotNull String cap, @NotNull String paese) {
+		this.id = id;
+		this.codiceFiscale = codiceFiscale;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.email = email;
+		this.telefono = telefono;
+		this.indirizzo = indirizzo;
+		this.citta = citta;
+		this.cap = cap;
+		this.paese = paese;
+	}
+	
 	
 	@Override
 	public int hashCode() {
@@ -111,5 +137,15 @@ public class ClienteModel {
 	public void setDataRegistrazione(LocalDateTime dataRegistrazione) {
 		this.dataRegistrazione = dataRegistrazione;
 	}
+
+	public Boolean getAttivo() {
+		return attivo;
+	}
+
+	public void setAttivo(Boolean attivo) {
+		this.attivo = attivo;
+	}
+	
+	
 		
 }

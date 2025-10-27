@@ -1,6 +1,7 @@
 package it.personalproject.clienti.entities;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import jakarta.persistence.*;
 
@@ -42,12 +43,15 @@ public class TisClienti {
     
     @Column(name = "Data_registrazione", updatable = false)
     private LocalDateTime dataRegistrazione;
+    
+    @Column(name = "Attivo", nullable = false)
+    private Boolean attivo;
 
-    // --- Costruttori ---
     public TisClienti() {}
 
-    public TisClienti(String nome, String cognome, String email, String telefono, String indirizzo, String citta, String cap, String paese) {
-        this.nome = nome;
+    public TisClienti(String codiceFiscale, String nome, String cognome, String email, String telefono, String indirizzo, String citta, String cap, String paese) {
+        this.codiceFiscale = codiceFiscale;
+    	this.nome = nome;
         this.cognome = cognome;
         this.email = email;
         this.telefono = telefono;
@@ -55,6 +59,25 @@ public class TisClienti {
         this.citta = citta;
         this.cap = cap;
         this.paese = paese;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+    	
+    	if(o == null) return false;
+    	if(this == o) return true;
+    	
+    	if(!getClass().equals(o.getClass()))
+    		return false;
+    	
+    	TisClienti cliente = (TisClienti) o;
+    	
+    	return Objects.equals(this.id, cliente.getId());
+    }
+    
+    @Override
+    public int hashCode() {
+    	return Objects.hash(id);
     }
 
     // --- Getter & Setter ---
@@ -99,6 +122,14 @@ public class TisClienti {
 
 	public void setDataRegistrazione(LocalDateTime dataRegistrazione) {
 		this.dataRegistrazione = dataRegistrazione;
+	}
+
+	public Boolean getAttivo() {
+		return attivo;
+	}
+
+	public void setAttivo(Boolean attivo) {
+		this.attivo = attivo;
 	}
     
     

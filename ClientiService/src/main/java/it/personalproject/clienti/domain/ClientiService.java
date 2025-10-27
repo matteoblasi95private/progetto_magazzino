@@ -11,7 +11,7 @@ public interface ClientiService {
 	
 	public Optional<ClienteModel> getCliente(Integer id);
 	
-	public void cancellaCliente(Integer id);
+	public ClienteModel cancellaCliente(Integer id) throws ClienteNotFoundException;
 	
 	public ClienteModel aggiornaCliente(ClienteModel ordine) throws ClienteNotFoundException;
 	

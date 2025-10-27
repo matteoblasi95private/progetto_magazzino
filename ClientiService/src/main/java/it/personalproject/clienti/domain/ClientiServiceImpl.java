@@ -3,8 +3,6 @@ package it.personalproject.clienti.domain;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -17,7 +15,6 @@ import it.personalproject.clienti.converters.ClientiModelToClientiEntityConverte
 import it.personalproject.clienti.entities.TisClienti;
 import it.personalproject.clienti.exceptions.ClienteNotFoundException;
 import it.personalproject.clienti.repositories.ClientiRepository;
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ClientiServiceImpl implements ClientiService {
@@ -40,7 +37,9 @@ public class ClientiServiceImpl implements ClientiService {
 	public ClienteModel creaCliente(ClienteModel cliente) {
 		
 		TisClienti clienteEntity = clientiModelToClientiEntityConverter.convert(cliente);
-						
+		clienteEntity.setAttivo(true);
+		clienteEntity.setDataRegistrazione(LocalDateTime.now());
+		
 		clienteEntity = clientiRepository.save(clienteEntity);
 		
 		return clientiEntityToClientiModelConverter.convert(clienteEntity);
@@ -68,11 +67,14 @@ public class ClientiServiceImpl implements ClientiService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void cancellaCliente(Integer id) {
-		Optional<TisClienti> clientEntity = clientiRepository.findById(id);
-		if(clientEntity.isPresent()) {
-			clientiRepository.delete(clientEntity.get());
-		}
+	public ClienteModel cancellaCliente(Integer id) throws ClienteNotFoundException {
+		
+		TisClienti clienteEntity = clientiRepository.findById(id).orElseThrow(() -> new ClienteNotFoundException("ERRORE CANCELLAZIONE CLIENTE CON [ID: " + id + "] - CLIENTE NON TROVATO"));
+		clienteEntity.setAttivo(false);
+		clienteEntity = clientiRepository.save(clienteEntity);
+		
+		return clientiEntityToClientiModelConverter.convert(clienteEntity);
+		
 	}
 
 	@Override
@@ -116,7 +118,7 @@ public class ClientiServiceImpl implements ClientiService {
 				
 		var clientiList = clientiRepository.findAll();
 		
-		if(clientiList == null || clientiList.isEmpty()) {
+		if(clientiList.isEmpty()) {
 			return Collections.emptyList();
 		}
 		

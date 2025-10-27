@@ -49,7 +49,7 @@ public class ClientiController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity cancellaCliente(@PathVariable("id") Integer id) {
+	public ResponseEntity cancellaCliente(@PathVariable("id") Integer id) throws ClienteNotFoundException {
 		
 		clientiService.cancellaCliente(id);
 		
