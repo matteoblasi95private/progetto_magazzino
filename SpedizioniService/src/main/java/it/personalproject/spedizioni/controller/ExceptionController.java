@@ -2,22 +2,15 @@ package it.personalproject.spedizioni.controller;
 
 import java.net.URI;
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import it.personalproject.prodotti.controller.ExceptionController;
-import it.personalproject.prodotti.exceptions.ProdottoNotFoundException;
 import it.personalproject.spedizioni.exceptions.SpedizioneNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
